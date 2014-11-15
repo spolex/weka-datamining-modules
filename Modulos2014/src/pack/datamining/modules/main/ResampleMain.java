@@ -15,8 +15,8 @@ public class ResampleMain {
 		//For logs
 				String LOG_TAG=ResampleMain.class.getSimpleName().toString();
 				
-				LoaderSaver.getMyLoader(args[0]).loadArff();
-				Instances instances = LoaderSaver.getMyLoader(null).getInstances();
+				
+				Instances instances = LoaderSaver.getMyLoader().loadArff(args[0]);
 				Instances filteredInstances=null;
 				try 
 				{
@@ -28,7 +28,7 @@ public class ResampleMain {
 				{
 					Logger.getLogger(LOG_TAG).log(Level.SEVERE, e.getMessage());
 				}
-				LoaderSaver.getMyLoader(null).saveInstances(filteredInstances);
+				LoaderSaver.getMyLoader().saveInstances(filteredInstances, args[0] + ".Resampled.arff");
 	}
 
 }
