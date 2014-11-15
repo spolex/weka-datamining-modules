@@ -7,7 +7,9 @@ import weka.filters.supervised.instance.Resample;
 public class Balance
 {
 	/**
-	 * pre: recibe las instancias desbalanceadas(más de una clase que de las demas)
+	 * Recibe las instancias desbalanceadas(más de una clase que de las demas).
+	 * Es necesario conocer que atributo es la clase.
+	 * 
 	 * @param pData
 	 * @return Instances: devuelve las instancias balanceadas (cantidades similares de cada clase).
 	 * @throws Exception
