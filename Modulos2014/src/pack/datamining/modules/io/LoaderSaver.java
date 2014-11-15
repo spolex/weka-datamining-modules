@@ -6,7 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import pack.datamining.modules.util.Strings;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 
@@ -16,6 +19,7 @@ public class LoaderSaver
 	private Instances instances;
 	private String orPath;
 	private String desPath;
+	private static String LOG_TAG = LoaderSaver.class.getSimpleName().toString();
 	
 	/**
 	 * Constructora del objeto LoaderSaver
@@ -49,19 +53,22 @@ public class LoaderSaver
 	public void loadArff ()
 	{
 		BufferedReader reader= null;
-		try {
+		try 
+		{
 			reader = new BufferedReader(new FileReader(orPath));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} 
+		catch (FileNotFoundException e) {
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_FILE_NOTFOUND);
 		}
 		
 		instances = null;
-		try {
+		try 
+		{
 			instances = new Instances(reader);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} 
+		catch (IOException e) 
+		{
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_IO_FAIL);
 		}
 	}
 	
@@ -93,17 +100,21 @@ public class LoaderSaver
 		}
 		ArffSaver saver = new ArffSaver();
 		saver.setInstances(instancesToSave);
-		try {
+		try 
+		{
 			saver.setFile(new File(desPath));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} 
+		catch (IOException e1) 
+		{
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_IO_FAIL);
 		}
-		try {
+		try 
+		{
 			saver.writeBatch();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		catch (IOException e) 
+		{
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_IO_FAIL);
 		}
 	}
 }
