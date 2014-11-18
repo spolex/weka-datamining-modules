@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import pack.datamining.modules.filters.Balance;
 import pack.datamining.modules.io.LoaderSaver;
-import pack.datamining.modules.util.Strings;
 import weka.core.Instances;
 
 public class ResampleMain {

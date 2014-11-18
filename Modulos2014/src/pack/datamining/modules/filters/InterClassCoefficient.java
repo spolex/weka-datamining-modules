@@ -18,7 +18,7 @@ public class InterClassCoefficient {
 		if(pDelta!=0)
 			this.delta=pDelta;
 		else
-			this.delta=1/pInstances.numInstances();
+			this.delta=1/2*pInstances.numInstances();
 	}
 	
 	/**
