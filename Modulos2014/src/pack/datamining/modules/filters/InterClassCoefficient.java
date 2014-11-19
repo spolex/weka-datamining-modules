@@ -22,7 +22,7 @@ public class InterClassCoefficient {
 		else
 			this.delta=1/2*pInstances.numInstances();
 		
-		distancias = new double[pInstances.numInstances][pInstances.numInstances];
+		distancias = new double[pInstances.numInstances()][pInstances.numInstances()];
 		//inicializo todas las posiciones a -1
 		for(int i = 0;i<distancias.length;i++)
 		{
@@ -115,7 +115,7 @@ public class InterClassCoefficient {
 				else
 				{
 					//No conozco la distancia, la calculo y almaceno
-					double distancia = this.distanceFunction.distance(pInstances.instance(i),pInstances.instance(j))
+					double distancia = this.distanceFunction.distance(pInstances.instance(i),pInstances.instance(j));
 					distance+=distancia;
 					this.distancias[i][j] = distancia;
 				}
