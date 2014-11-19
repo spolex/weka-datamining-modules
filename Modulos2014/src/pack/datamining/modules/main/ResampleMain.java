@@ -5,14 +5,13 @@ import java.util.logging.Logger;
 
 import pack.datamining.modules.filters.Balance;
 import pack.datamining.modules.io.LoaderSaver;
-import pack.datamining.modules.util.Strings;
 import weka.core.Instances;
 
 public class ResampleMain {
 
 	public static void main(String[] args) 
 	{
-		//For logs
+				//For logs
 				String LOG_TAG=ResampleMain.class.getSimpleName().toString();
 				
 				LoaderSaver.getMyLoader(args[0]).loadArff();
@@ -21,8 +20,7 @@ public class ResampleMain {
 				try 
 				{
 					instances.setClassIndex(instances.numAttributes()-1);
-					filteredInstances = Balance.getBalancedInstances(instances);
-					
+					filteredInstances = Balance.getBalancedInstances(instances);					
 				} 
 				catch (Exception e) 
 				{
