@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,22 +15,14 @@ import weka.core.converters.ArffSaver;
 public class LoaderSaver 
 {
 	private static LoaderSaver myLoader= null;
-	private Instances instances;
-	private String orPath;
-	private String desPath;
 	private static String LOG_TAG = LoaderSaver.class.getSimpleName().toString();
 	
 	/**
 	 * Constructora del objeto LoaderSaver
 	 * @param pOrPath Ruta del fichero a cargar
 	 */
-	private LoaderSaver(String pOrPath)
+	private LoaderSaver()
 	{
-		orPath = pOrPath;
-		// El fichero arff de salida se guardar en la 
-		// misma ruta que el original añadidendo modified al 
-		// nombre y un codigo temporal.
-		desPath = pOrPath + "modified"+new Date ().getTime() + ".arff";
 	}
 	
 	/**
@@ -40,28 +31,30 @@ public class LoaderSaver
 	 * @param pOrPath Ruta del fichero a cargar
 	 * @return El objeto LoaderSaver
 	 */
-	public static LoaderSaver getMyLoader(String pOrPath)
+	public static LoaderSaver getMyLoader()
 	{
 		if (myLoader == null)
-			myLoader = new LoaderSaver(pOrPath);
+			myLoader = new LoaderSaver();
 		return myLoader;
 	}
 	
 	/**
-	 * Carga el fichero arff de la ruta orPath
+	 * Carga las instacias de un fichero Arff
+	 * @param pPath Ruta del fichero a cargar
+	 * @return Las Instancias cargadas
 	 */
-	public void loadArff ()
+	public Instances loadArff (String pPath)
 	{
 		BufferedReader reader= null;
 		try 
 		{
-			reader = new BufferedReader(new FileReader(orPath));
+			reader = new BufferedReader(new FileReader(pPath));
 		} 
 		catch (FileNotFoundException e) {
 			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_FILE_NOTFOUND);
 		}
 		
-		instances = null;
+		Instances instances = null;
 		try 
 		{
 			instances = new Instances(reader);
@@ -70,39 +63,23 @@ public class LoaderSaver
 		{
 			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_IO_FAIL);
 		}
-	}
-	
-	/**
-	 * Devuelve las instacias del fichero de OrPath
-	 * @return
-	 */
-	public Instances getInstances ()
-	{
 		return instances;
 	}
-
+	
 	/**
 	 * Guarda las instancias en un fichero Arff
 	 * @param pInstances Instancias a guardar (si es null guardamos las
 	 *  instancias del propio objeto)
+	 * @param pPath Ruta donde se guardaran las insntacias
 	 */
-	public void saveInstances (Instances pInstances)
+	public void saveInstances (Instances pInstances, String pPath)
 	{
-		Instances instancesToSave = null;
 		
-		if (pInstances == null)
-		{
-			instancesToSave = instances;
-		}
-		else
-		{
-			instancesToSave = pInstances;
-		}
 		ArffSaver saver = new ArffSaver();
-		saver.setInstances(instancesToSave);
+		saver.setInstances(pInstances);
 		try 
 		{
-			saver.setFile(new File(desPath));
+			saver.setFile(new File(pPath));
 		} 
 		catch (IOException e1) 
 		{

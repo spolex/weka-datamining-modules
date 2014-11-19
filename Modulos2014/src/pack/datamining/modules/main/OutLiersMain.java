@@ -16,12 +16,11 @@ public class OutLiersMain
 		//For logs
 		String LOG_TAG=OutLiersMain.class.getSimpleName().toString();
 		
-		LoaderSaver.getMyLoader(args[0]).loadArff();
-		Instances instances = LoaderSaver.getMyLoader(null).getInstances();
+		Instances instances = LoaderSaver.getMyLoader().loadArff(args[0]);
 		try 
 		{
 			Instances filteredInstances = Outliers.getFilterInstancesWithoutOutliers(instances);
-			LoaderSaver.getMyLoader(null).saveInstances(filteredInstances);
+			LoaderSaver.getMyLoader().saveInstances(filteredInstances, args[0] + ".WithoutOutliers.arff" );
 		} 
 		catch (Exception e) 
 		{
