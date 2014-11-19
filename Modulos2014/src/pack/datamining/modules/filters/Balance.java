@@ -3,7 +3,11 @@ package pack.datamining.modules.filters;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.instance.Resample;
-
+/**
+ * 
+ * @author Iñigo Sánchez Méndez (spolex)
+ *
+ */
 public class Balance
 {
 	/**

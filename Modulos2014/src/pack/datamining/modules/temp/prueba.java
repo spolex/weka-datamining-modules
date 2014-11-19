@@ -26,7 +26,6 @@ public class prueba {
 			try 
 			{
 				Thread.sleep(25);
-
 			} 
 			catch (InterruptedException e) 
 			{

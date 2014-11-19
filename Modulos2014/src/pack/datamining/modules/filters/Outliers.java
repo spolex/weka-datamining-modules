@@ -6,6 +6,11 @@ import weka.filters.unsupervised.attribute.InterquartileRange;
 import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.unsupervised.instance.RemoveWithValues;
 
+/**
+ * 
+ * @author Iñigo Sánchez Méndez spolex
+ *
+ */
 public class Outliers 
 {
 	/**
