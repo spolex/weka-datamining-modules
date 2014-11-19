@@ -1,5 +1,7 @@
 package pack.datamining.modules.filters;
 
+import java.util.HashMap;
+
 import weka.core.DistanceFunction;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -9,27 +11,58 @@ public class InterClassCoefficient {
 	private double delta;
 	private DistanceFunction distanceFunction;
 	private Instances instances;
-	
-	private double[][] distancias;//las distancias que hay entre las instancias
+	private HashMap<Integer, Double> distances;
+	private int instancesNumber;
 	
 	public InterClassCoefficient(Instances pInstances,DistanceFunction pDistance,double pDelta)
 	{
+		//Almaceno la función de distancia.
 		this.distanceFunction=pDistance;
+		//Almaceno la lista de instancias.
 		this.instances=pInstances;
 		
+		//Si no se ha establecido una delta eligo una arbitraria.
 		if(pDelta!=0)
 			this.delta=pDelta;
 		else
 			this.delta=1/2*pInstances.numInstances();
 		
-		distancias = new double[pInstances.numInstances()][pInstances.numInstances()];
-		//inicializo todas las posiciones a -1
-		for(int i = 0;i<distancias.length;i++)
-		{
-			for(int j = 0;j<distancias[i].length;j++) distancias[i][j]=-1;
-		}
+		//Hago el cálculo de las distancias.
+		this.inicializeDistances();
+		//Almaceno el número de instancias.
+		this.instancesNumber=pInstances.numInstances();
 	}
 	
+	/**
+	 * Función que inicializa el hashmap de distancias
+	 */
+	private void inicializeDistances() {
+
+		//Almacena el hashcode de la instancia en evaluación.
+		int temporaryInstanceHash;
+		//Almacena la instancia en evaluación.
+		Instance temporaryInstance;
+		//Almacena la clave propuesta para estar en el hashmap.
+		int temporaryKey;
+		
+		//Para cada instancia
+		for(int i=0;i<this.instancesNumber;i++)
+		{
+			//Almaceno los valores temporales para no tener que hacerlo n veces.
+			temporaryInstance=this.instances.instance(i);
+			temporaryInstanceHash=temporaryInstance.hashCode();
+			//Evaluo su distancia con respecto al resto que no hayan sido evaluadas.
+			for(int j=i;j<this.instancesNumber;j++)
+			{
+				//Calculo la clave que debería tener la tabla hash.
+				temporaryKey=cantorPairing(temporaryInstanceHash, this.instances.instance(j).hashCode());
+				//Si no existe esa clave, calculo la distancia e introduzco la clave dentro del HashMap
+				if(!this.distances.containsKey(temporaryKey))
+					distances.put(temporaryKey, distanceFunction.distance(temporaryInstance, this.instances.instance(j)));
+			}
+		}	
+	}
+
 	/**
 	 * Elimina los outliers mediante el método propuesto.
 	 * @return
@@ -54,15 +87,15 @@ public class InterClassCoefficient {
 		for(baseDistance=this.internalDistance(instances);distanceImprovement>delta;baseDistance=this.internalDistance(instances))
 		{
 			//Para cada instancia
-			for(int i=0;i<instances.numInstances();i++)
+			for(int i=0;i<this.instancesNumber;i++)
 			{
 				//Almaceno la instancia en evaluación.
 				temporaryInstance=instances.instance(i);
 				//Elimino temporalmente la instancia en evaluación.
-				instances.delete(i);
+				this.instances.delete(i);
 				//La mejora de distancia en un primer momento es cero.
 				distanceImprovement=0;
-				//Calculo la distancia intracluster sin la instancia.
+				//Calculo la distancia interna sin la instancia.
 				temporaryDistance=this.internalDistance(instances);
 				
 				//Si la mejora de la distancia es mayor a la mejora anterior.
@@ -79,12 +112,21 @@ public class InterClassCoefficient {
 			//Calculo la mejora porcentual que supone eliminar la instancia.
 			distanceImprovement=1-(distanceImprovement/baseDistance);
 			//Elimino la instancia propuesta al finalizar la evaluación.
-			instances.delete(proposedInstance);
+			this.removeInstance(proposedInstance);
 		}
 		
 		return instances;
 	}
 	
+	/**
+	 * Dado un índice de instancia, la elimina da la lista de instancias y actualiza el contador de número de instancias.
+	 * @param pInstance
+	 */
+	private void removeInstance(int pInstance)
+	{
+		this.instancesNumber-=1;
+		this.instances.delete(pInstance);
+	}
 	/**
 	 * Dada una lista de instancias, calcula la distancia de cada una de ellas al resto.
 	 * @param pInstances
@@ -93,36 +135,60 @@ public class InterClassCoefficient {
 	 */
 	private double internalDistance(Instances pInstances)
 	{
-		//Obtengo el número de instancias en evaluación.
-		int numInstances=pInstances.numInstances();
-		
+		//Obtengo el hashcode de la instancia en evaluación.
+		int temporaryHash;
 		double distance=0;
 		//Para cada instancia.
-		for(int i=0;i<numInstances;i++)
+		for(int i=0;i<this.instancesNumber;i++)
 		{
-			//Acumulo su distancia con el resto.
-			for(int j=0;j<numInstances;j++)
-			{
-				//si la distancia era conocida no la vuelvo a calcular, además la matriz es simétrica
-				if(this.distancias[i][j] != -1)
-				{
-					distance+=this.distancias[i][j];
-				}
-				else if(this.distancias[j][i] != -1)
-				{
-					distance+=this.distancias[j][i];
-				}
-				else
-				{
-					//No conozco la distancia, la calculo y almaceno
-					double distancia = this.distanceFunction.distance(pInstances.instance(i),pInstances.instance(j));
-					distance+=distancia;
-					this.distancias[i][j] = distancia;
-				}
-			}
+			temporaryHash=pInstances.instance(i).hashCode();
+			
+			//Acumulo su distancia con el resto extrayendo la distancia de la tabla de distancias
+			for(int j=0;j<this.instancesNumber;j++)
+				distance+=this.distances.get(cantorPairing(this.instances.instance(j).hashCode(),temporaryHash));
 		}
 		//Retorno la suma de las distancias acumuladas.
 		return distance;
+	}
+	
+	/**
+	 * Dados dos enteros, devuelven un tercero combinación de los anteriores.
+	 * @param pFirst
+	 * @param pSecond
+	 * @return
+	 */
+	private int cantorPairing(int pFirst,int pSecond)
+	{
+		int maxiumConverted;
+		int miniumConverted;
+		
+		//Almaceno cual es el mayor de los dos.
+		if(pFirst>pSecond)
+		{
+			maxiumConverted=pFirst;
+			miniumConverted=pSecond;
+		}else
+		{
+			maxiumConverted=pSecond;
+			miniumConverted=pFirst;
+					
+		}
+		//Los convierto a números naturales.
+		maxiumConverted=bijectionZtoN(maxiumConverted);
+		miniumConverted=bijectionZtoN(miniumConverted);
+		
+		//Retorno el valor utilizando la función cantorPairing.
+		return ((1/2)*maxiumConverted*(maxiumConverted+1))+miniumConverted;
+	}
+	
+	/**
+	 * Función para convertir los números enteros en naturales.
+	 * @param pFirst
+	 * @return
+	 */
+	private int bijectionZtoN(int pFirst)
+	{
+		if(pFirst<=0) return -2*pFirst; else return 2*pFirst-1;
 	}
 	
 
