@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 import pack.datamining.modules.frames.ProgressDialog;
 import pack.datamining.modules.temp.prueba;
 import pack.datamining.modules.util.Strings;
-import pack.datamining.modules.util.VerboseCutter;
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.LibSVM;
 import weka.core.Instances;
