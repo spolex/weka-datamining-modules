@@ -10,8 +10,6 @@ public class InterClassCoefficient {
 	private DistanceFunction distanceFunction;
 	private Instances instances;
 	
-	private double[][] distancias;//las distancias que hay entre las instancias
-	
 	public InterClassCoefficient(Instances pInstances,DistanceFunction pDistance,double pDelta)
 	{
 		this.distanceFunction=pDistance;
@@ -21,13 +19,6 @@ public class InterClassCoefficient {
 			this.delta=pDelta;
 		else
 			this.delta=1/2*pInstances.numInstances();
-		
-		distancias = new double[pInstances.numInstances()][pInstances.numInstances()];
-		//inicializo todas las posiciones a -1
-		for(int i = 0;i<distancias.length;i++)
-		{
-			for(int j = 0;j<distancias[i].length;j++) distancias[i][j]=-1;
-		}
 	}
 	
 	/**
@@ -103,22 +94,7 @@ public class InterClassCoefficient {
 			//Acumulo su distancia con el resto.
 			for(int j=0;j<numInstances;j++)
 			{
-				//si la distancia era conocida no la vuelvo a calcular, además la matriz es simétrica
-				if(this.distancias[i][j] != -1)
-				{
-					distance+=this.distancias[i][j];
-				}
-				else if(this.distancias[j][i] != -1)
-				{
-					distance+=this.distancias[j][i];
-				}
-				else
-				{
-					//No conozco la distancia, la calculo y almaceno
-					double distancia = this.distanceFunction.distance(pInstances.instance(i),pInstances.instance(j));
-					distance+=distancia;
-					this.distancias[i][j] = distancia;
-				}
+				distance+=this.distanceFunction.distance(pInstances.instance(i),pInstances.instance(j));
 			}
 		}
 		//Retorno la suma de las distancias acumuladas.
