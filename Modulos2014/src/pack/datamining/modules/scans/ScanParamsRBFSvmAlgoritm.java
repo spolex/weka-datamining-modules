@@ -47,6 +47,7 @@ public class ScanParamsRBFSvmAlgoritm
 		this.mTrain=pTrainData;
 		this.mDev=pDevData;
 		this.mModel= new LibSVM();
+		
 	}
 	
 	public void ScanParams(){
@@ -63,11 +64,22 @@ public class ScanParamsRBFSvmAlgoritm
 		//establecemos la posición de la clase de los conjuntos de datos.
 		mDev.setClassIndex(mDev.numAttributes()-1);
 		mTrain.setClassIndex(mTrain.numAttributes()-1);
+		try 
+		{
+			this.evaluator=new Evaluation(mTrain);
+		} 
+		catch (Exception e)
+		{
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_EVALUACION);
+			e.printStackTrace();
+		}
 		//Utilizamos C-SVC
 		mModel.setSVMType(new SelectedTag(0, LibSVM.TAGS_SVMTYPE));
 		
 		//Establecemos el kernel RBF justiificado en el informe práctica 3 SAD
 		mModel.setKernelType(new SelectedTag(2,LibSVM.TAGS_KERNELTYPE));
+		
+		mModel.setDegree(0);
 		
 		
 		//Inicializar figuras de mérito
@@ -83,39 +95,18 @@ public class ScanParamsRBFSvmAlgoritm
 		maxOfCSearch = 11; //Hasta  que valor es óptimo C "barrer"??
 		maxOfGSearch = 4;  //Hasta  que valor es óptimo	
 		
-		bestC=Double.MIN_VALUE;
-		bestG=Double.MIN_VALUE;
+		bestC=-15;
+		bestG=-3;
 		
-		//cargamos con el conjunto de entrenamiento el evaluador
-		try 
-		{
-			evaluator = new Evaluation(mTrain);
-		} 
-		catch (Exception e)
-		{
-			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_EVALUACION);
-		}
+		
 	}
 	
-	public void scanParams(){
+	public LibSVM scanParams(){
 		configureModel();
-		//Barra de progreso para conocer ejecución del thread
-		JDialog parent = new JDialog();
-	    parent.setSize(500, 150);
-	    JLabel jl = new JLabel();
-	    
-	    
-		final ProgressDialog dlg = new ProgressDialog(parent, maxOfCSearch, Strings.MSG_SCAN_PARAMS);
-		Thread t = new Thread(new Runnable() {
-			 public void run() {
-		        dlg.show();
-			 }
-		});
-		t.start();
-		for (int c = -15; c <= maxOfCSearch; c++) {
-			jl.setText("Contando : " + c);
+		
+		for (int c = -15; c <= -14; c++) {
 			
-			for (int g = -3; g <= maxOfGSearch; g++)
+			for (int g = -3; g <= -2; g++)
 			{
 				//La justificación del uso de potencias de dos se encuentra en el informe practica 3 SAD.
 				double cost = (Math.pow(2, c));
@@ -124,10 +115,10 @@ public class ScanParamsRBFSvmAlgoritm
 				mModel.setCost(cost);
 				try 
 				{
-					dlg.processElement(prueba.class.getSimpleName().toString());
 					try 
 					{
 						mModel.buildClassifier(mTrain);
+						
 					} 
 					catch (Exception e1) 
 					{
@@ -137,10 +128,11 @@ public class ScanParamsRBFSvmAlgoritm
 					evaluator.evaluateModel(mModel, mDev);
 					//Si no lo reactivamos dejan de funcionar las salidas por pantalla 
 					//VerboseCutter.getVerboseCutter().activateVerbose();
+					
 				} 
 				catch (Exception e) 
 				{
-					Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_EVALUACION_MODELO);
+					Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_EVALUACION_MODELO+" - "+e.toString());
 				}
 				
 				mFmeasureAux = evaluator.fMeasure(0);
@@ -157,15 +149,12 @@ public class ScanParamsRBFSvmAlgoritm
 				}
 			}
 		}
-		try 
-		{
 			mModel.setGamma(bestG);
 			mModel.setCost(bestC);
-			File symbolic = new File(".");  
 			File directory = null;
 			try 
 			{
-				directory = new File(symbolic.getCanonicalPath()+"/Models");
+				directory = new File("/Models");
 				if(!directory.exists())directory.mkdirs();
 				SerializationHelper.write("/Models/RBFsvm.model",mModel );
 			} 
@@ -176,16 +165,12 @@ public class ScanParamsRBFSvmAlgoritm
 			{
 				Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_CREAR_ARCHIVO+" .model");
 			}
-			
-			Thread.sleep(5);
-			dlg.close();
-			parent.dispose();
-		} 
-		catch (InterruptedException e) 
-		{
-			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_EJECUCION_INTERRUMPIDA);
-		}
+			return mModel;
 	}
+		
+		
+		
+	
 	public Instances randomize (Instances data, int seed) throws Exception
 	{
 		 Random rand = new Random(seed);   // create seeded number generator
