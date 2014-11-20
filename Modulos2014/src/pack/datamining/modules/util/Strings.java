@@ -18,4 +18,5 @@ public class Strings
 	public static final String MSG_ERROR_ENTRENAR_MODELO = "Error al entrenar el modelo";
 	public static final String MSG_ERROR_CREAR_ARCHIVO = "Error al crear el directorio";
 	public static final String MSG_ERROR_NUMS_ARGS = "El número de argumentos de entrada es incorrecto";
+	public static final String MSG_ERROR_CLASS_NOT_DEFINED = "No se ha definido el atributo clase";
 }
