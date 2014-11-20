@@ -98,9 +98,9 @@ public class ScanParamsRBFSvmAlgoritm
 	public LibSVM scanParams(){
 		configureModel();
 		
-		for (int c = -15; c <= -14; c++) {
+		for (int c = -15; c <= maxOfCSearch; c++) {
 			
-			for (int g = -3; g <= -2; g++)
+			for (int g = -3; g <= maxOfGSearch; g++)
 			{
 				//La justificación del uso de potencias de dos se encuentra en el informe practica 3 SAD.
 				double cost = (Math.pow(2, c));
