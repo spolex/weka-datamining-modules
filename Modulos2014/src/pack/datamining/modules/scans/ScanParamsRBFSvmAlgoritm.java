@@ -6,11 +6,6 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-
-import pack.datamining.modules.frames.ProgressDialog;
-import pack.datamining.modules.temp.prueba;
 import pack.datamining.modules.util.Strings;
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.LibSVM;
