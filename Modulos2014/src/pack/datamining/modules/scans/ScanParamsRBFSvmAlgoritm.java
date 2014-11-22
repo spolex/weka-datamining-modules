@@ -135,7 +135,8 @@ public class ScanParamsRBFSvmAlgoritm
 	 * @param cost
 	 * @param gamma
 	 */
-	private void extractEvaluatedModel(double cost, double gamma) {
+	private LibSVM extractEvaluatedModel(double cost, double gamma) 
+	{
 		this.mModel.setGamma(gamma);
 		this.mModel.setCost(cost);
 		this.mModel.setDegree(0);
@@ -149,12 +150,14 @@ public class ScanParamsRBFSvmAlgoritm
 		try 
 		{
 			this.mEvaluator=new Multibounds(mTrain);
+			mModel.buildClassifier(mTrain);
 		} 
 		catch (Exception e)
 		{
 			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_EVALUACION+e.getMessage());
 		}
-		mEvaluator.evaluateModel(mModel, mTrain, mDev);
+		mEvaluator.evaluateModel(mModel, mTrain, mDev);		
+		return this.mModel;
 	}
 	
 
