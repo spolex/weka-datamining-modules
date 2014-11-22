@@ -18,7 +18,7 @@ import weka.core.SerializationHelper;
  * @author Iñigo Sánchez Méndez (spolex)
  *
  */
-public class LibSVMBiEvaluation {
+public class LibSVMEvaluation {
 
 	public static void main(String[] args) {
 		if(args.length>2)
