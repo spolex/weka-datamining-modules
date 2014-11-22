@@ -51,7 +51,7 @@ public class LoaderSaver
 			reader = new BufferedReader(new FileReader(pPath));
 		} 
 		catch (FileNotFoundException e) {
-			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_FILE_NOTFOUND);
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_FILE_NOTFOUND+"-"+e.getMessage());
 		}
 		
 		Instances instances = null;
@@ -61,7 +61,7 @@ public class LoaderSaver
 		} 
 		catch (IOException e) 
 		{
-			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_IO_FAIL);
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_IO_FAIL+"-"+e.getMessage());
 		}
 		return instances;
 	}

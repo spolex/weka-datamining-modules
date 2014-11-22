@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import pack.datamining.modules.util.VerboseCutter;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.LibSVM;
@@ -45,7 +46,7 @@ public class Multibounds extends Evaluation
 	 * @throws Exception 
 	 */
 	public  void assesPerformanceNFCV(Classifier estimador, int pFold, Instances pData) throws Exception
-		{
+	{
 		try 
 		{			
 			estimador.buildClassifier(pData);
@@ -55,7 +56,7 @@ public class Multibounds extends Evaluation
 			Logger.getLogger(LOG_TAG).log(Level.SEVERE, e2.getMessage());
 		}
 		this.crossValidateModel(estimador, pData,pFold, new Random(1));		
-		}
+	}
 	/**
 	 *  pre: Recibe el evaluador con la evaluacion hecha
 	 * fuente:http://weka.wikispaces.com/Programmatic+Use 
@@ -145,12 +146,37 @@ public class Multibounds extends Evaluation
 	 * @param pTest
 	 * @throws Exception 
 	 */
-	public void biEvaluator(LibSVM modelo,Instances pTrain, Instances pDev, Instances pTest) throws Exception{
+	public void biEvaluatorSVM(LibSVM modelo,Instances pTrain, Instances pDev) throws Exception{
 		this.dishonestEvaluator(modelo, pTrain);
 		System.out.println(this.toSummaryString());
 		Instances all=pTrain;
 		all.addAll(pDev);
 		this.assesPerformanceNFCV(modelo, 10,all );
 	}
-	
+	/**
+	 * 
+	 * @param estimador
+	 * @param pTrain
+	 * @param pDev
+	 */
+	public void evaluateModel(LibSVM estimador,Instances pTrain,Instances pDev){			
+		try 
+		{		
+			estimador.buildClassifier(pTrain);
+		} 
+		catch (Exception e2) 
+		{
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, e2.getMessage());
+		}
+		try 
+		{
+			VerboseCutter.getVerboseCutter().cutVerbose();
+			this.evaluateModel(estimador, pDev);
+			VerboseCutter.getVerboseCutter().activateVerbose();;
+		} 
+		catch (Exception e)
+		{
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, e.getMessage());
+		}		
+	}
 }

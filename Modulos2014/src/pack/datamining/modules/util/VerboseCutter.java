@@ -2,6 +2,7 @@ package pack.datamining.modules.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 
 
@@ -74,6 +75,28 @@ public class VerboseCutter {
 		
 		//Cerramos el fichero y lo borramos
 		temporaryOutput.close();
+	}
+	
+	/**
+	 * borra la salida de consola
+	 * @param pUnix
+	 */
+	public void deleteConsole(boolean pUnix) {
+		if(pUnix){
+			try {
+				Runtime.getRuntime().exec("clear");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			try {
+				Runtime.getRuntime().exec("cls");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

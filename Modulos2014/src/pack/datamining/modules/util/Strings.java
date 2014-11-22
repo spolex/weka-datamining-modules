@@ -24,5 +24,6 @@ public class Strings
 	public static final String MSG_DIRECTROIO_CREADO = "El directorio ha sido creado con éxito";
 	public static final String MSG_INSTANCES_RANDOM = "Instancias barajadas...";
 	public static final String MSG_ERROR_INSTANCES_RANDOM = "Error al barajar las instancias";
+	public static final String MSG_ERROR_NUM_FORMATO = "Error en el formato, no es numérico";
 }
 
