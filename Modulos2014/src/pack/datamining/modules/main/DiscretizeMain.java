@@ -5,9 +5,8 @@ import java.util.logging.Logger;
 
 import pack.datamining.modules.filters.Discretization;
 import pack.datamining.modules.io.LoaderSaver;
+import pack.datamining.modules.util.Strings;
 import weka.core.*;
-import weka.filters.Filter;
-import weka.filters.supervised.attribute.Discretize;
 
 public class DiscretizeMain {
 
@@ -41,8 +40,7 @@ public class DiscretizeMain {
 		} 
 		catch (Exception e) 
 		{
-			e.printStackTrace();
-			//Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_OUTLIERS);
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_OUTLIERS+e.getMessage());
 		}
 	
 

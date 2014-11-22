@@ -1,10 +1,7 @@
 package pack.datamining.modules.filters;
 
-import java.io.File;
-import java.util.BitSet;
 import java.util.Random;
 
-import weka.attributeSelection.CfsSubsetEval;
 import weka.attributeSelection.ClassifierSubsetEval;
 import weka.attributeSelection.GreedyStepwise;
 import weka.classifiers.Classifier;
