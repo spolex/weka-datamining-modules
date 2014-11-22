@@ -119,10 +119,10 @@ public class Multibounds extends Evaluation
 	 * @param pRuta
 	 * @throws Exception
 	 */
-	public void dishonestEvaluator(Classifier estimador, Instances pData) throws Exception
+	public double[] dishonestEvaluator(Classifier estimador, Instances pData) throws Exception
 	{		
 		estimador.buildClassifier(pData);		
-		this.evaluateModel(estimador, pData);	 
+		return this.evaluateModel(estimador, pData);	 
 	}
 	
 	/**
@@ -132,10 +132,10 @@ public class Multibounds extends Evaluation
 	 * @param pRuta
 	 * @throws Exception
 	 */
-	public void dishonestEvaluatorSVM(LibSVM estimador, Instances pData) throws Exception
+	public double[] dishonestEvaluatorSVM(LibSVM estimador, Instances pData) throws Exception
 	{		
 		estimador.buildClassifier(pData);		
-		this.evaluateModel(estimador, pData);		 
+		return this.evaluateModel(estimador, pData);		 
 	}
 	/**
 	 * 
@@ -145,8 +145,9 @@ public class Multibounds extends Evaluation
 	 * @param pTest
 	 * @throws Exception 
 	 */
-	public void triEvaluator(LibSVM modelo,Instances pTrain, Instances pDev, Instances pTest) throws Exception{
+	public void biEvaluator(LibSVM modelo,Instances pTrain, Instances pDev, Instances pTest) throws Exception{
 		this.dishonestEvaluator(modelo, pTrain);
+		System.out.println(this.toSummaryString());
 		Instances all=pTrain;
 		all.addAll(pDev);
 		this.assesPerformanceNFCV(modelo, 10,all );
