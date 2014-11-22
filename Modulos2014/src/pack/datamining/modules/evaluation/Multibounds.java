@@ -1,6 +1,8 @@
 package pack.datamining.modules.evaluation;
 
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -10,6 +12,7 @@ import weka.core.Instances;
 @SuppressWarnings("serial")
 public class Multibounds extends Evaluation
 {
+	public static final String LOG_TAG = Multibounds.class.getSimpleName().toString();
 	private Instances data;	
 	public Multibounds(Instances pData) throws Exception
 	{
@@ -46,9 +49,10 @@ public class Multibounds extends Evaluation
 		try 
 		{			
 			estimador.buildClassifier(pData);
-		} catch (Exception e2) 
+		} 
+		catch (Exception e2) 
 		{
-			e2.printStackTrace();
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, e2.getMessage());
 		}
 		this.crossValidateModel(estimador, pData,pFold, new Random(1));		
 		}
@@ -131,8 +135,21 @@ public class Multibounds extends Evaluation
 	public void dishonestEvaluatorSVM(LibSVM estimador, Instances pData) throws Exception
 	{		
 		estimador.buildClassifier(pData);		
-		this.evaluateModel(estimador, pData);
-		 
+		this.evaluateModel(estimador, pData);		 
+	}
+	/**
+	 * 
+	 * @param modelo
+	 * @param pTrain
+	 * @param pDev
+	 * @param pTest
+	 * @throws Exception 
+	 */
+	public void triEvaluator(LibSVM modelo,Instances pTrain, Instances pDev, Instances pTest) throws Exception{
+		this.dishonestEvaluator(modelo, pTrain);
+		Instances all=pTrain;
+		all.addAll(pDev);
+		this.assesPerformanceNFCV(modelo, 10,all );
 	}
 	
 }

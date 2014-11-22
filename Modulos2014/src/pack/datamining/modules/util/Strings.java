@@ -18,4 +18,9 @@ public class Strings
 	public static final String MSG_ERROR_ENTRENAR_MODELO = "Error al entrenar el modelo";
 	public static final String MSG_ERROR_CREAR_ARCHIVO = "Error al crear el directorio";
 	public static final String MSG_ERROR_NUMS_ARGS = "El número de argumentos de entrada es incorrecto";
+	public static final String MSG_ERROR_ARGS = "Asegurese de haber introducido correctamente los argumentos: <train path> <dev path> <test path> ";
+	public static final String MSG_SVM_OPTIMIZED = "Modelo SVM optimizado";
+	public static final String MSG_DIRECTROIO_CREADO = "El directorio ha sido creado con éxito";
+	public static final String MSG_INSTANCES_RANDOM = "Instancias barajadas...";
+	public static final String MSG_ERROR_INSTANCES_RANDOM = "Error al barajar las instancias";
 }

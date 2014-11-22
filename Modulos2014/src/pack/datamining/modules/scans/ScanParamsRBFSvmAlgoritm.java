@@ -2,6 +2,9 @@ package pack.datamining.modules.scans;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +25,8 @@ public class ScanParamsRBFSvmAlgoritm
 	private Instances mTrain;
 	private Instances mDev;
 	private LibSVM mModel;
-	private Evaluation evaluator;
+	private Evaluation mEvaluator;
+	private File mModels;
 	
 	// Variables para comparar la f-measure en curso con la f-measure de la vuelta anterior.
 	private double mFmeasureAux = 0.0;
@@ -55,12 +59,19 @@ public class ScanParamsRBFSvmAlgoritm
 	 */
 	private void configureModel()
 	{
+		//Creamos el directorio necesario para serializar los modelos.
+		mModels = new File("Modelos");
+		if(!mModels.exists())
+		{
+			mModels.mkdirs();
+			System.out.println(mModels.getAbsolutePath()+": "+Strings.MSG_DIRECTROIO_CREADO);
+		}
 		//establecemos la posición de la clase de los conjuntos de datos.
 		mDev.setClassIndex(mDev.numAttributes()-1);
 		mTrain.setClassIndex(mTrain.numAttributes()-1);
 		try 
 		{
-			this.evaluator=new Evaluation(mTrain);
+			this.mEvaluator=new Evaluation(mTrain);
 		} 
 		catch (Exception e)
 		{
@@ -86,8 +97,8 @@ public class ScanParamsRBFSvmAlgoritm
 		
 		// Utilizamos el kernel por defecto RBF
 		//Inicio de barrido de parámetros
-		maxOfCSearch = 11; //Hasta  que valor es óptimo C "barrer"??
-		maxOfGSearch = 4;  //Hasta  que valor es óptimo	
+		maxOfCSearch = -14; //Hasta  que valor es óptimo C "barrer"??11
+		maxOfGSearch =-2;  //Hasta  que valor es óptimo	4
 		
 		bestC=-15;
 		bestG=-3;
@@ -95,6 +106,10 @@ public class ScanParamsRBFSvmAlgoritm
 		
 	}
 	
+	/**
+	 * barrido ad-hoc de los parámetros cost & gamma del modelo svm
+	 * @return LibSVM
+	 */
 	public LibSVM scanParams(){
 		configureModel();
 		
@@ -119,7 +134,7 @@ public class ScanParamsRBFSvmAlgoritm
 						Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_ENTRENAR_MODELO+" - "+e1.toString());
 					}
 					//VerboseCutter.getVerboseCutter().cutVerbose();
-					evaluator.evaluateModel(mModel, mDev);
+					mEvaluator.evaluateModel(mModel, mDev);
 					//Si no lo reactivamos dejan de funcionar las salidas por pantalla 
 					//VerboseCutter.getVerboseCutter().activateVerbose();
 					
@@ -129,7 +144,7 @@ public class ScanParamsRBFSvmAlgoritm
 					Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_EVALUACION_MODELO+" - "+e.toString());
 				}
 				
-				mFmeasureAux = evaluator.fMeasure(0);
+				mFmeasureAux = mEvaluator.fMeasure(0);
 				if (mFmeasureAux > mFmeasureBest)
 				{
 					mFmeasureBest = mFmeasureAux;
@@ -145,12 +160,14 @@ public class ScanParamsRBFSvmAlgoritm
 		}
 			mModel.setGamma(bestG);
 			mModel.setCost(bestC);
-			File directory = null;
 			try 
 			{
-				directory = new File("/Models");
-				if(!directory.exists())directory.mkdirs();
-				SerializationHelper.write("/Models/RBFsvm.model",mModel );
+				if(!mModels.exists())mModels.mkdirs();
+				Calendar calendar = new GregorianCalendar(); // Fecha y hora actuales.
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm"); // Formato de la fecha.
+				String dateS = dateFormat.format(calendar.getTime()); // Fecha y hora actuales formateadas.		
+				//String filePath = "Resultados/"+dateS+"resultados.txt";
+				SerializationHelper.write(mModels+"/"+dateS+"_RBFsvm.model",mModel );
 			} 
 			catch (IOException e) 
 			{
@@ -160,16 +177,5 @@ public class ScanParamsRBFSvmAlgoritm
 				Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_CREAR_ARCHIVO+" .model");
 			}
 			return mModel;
-	}
-		
-		
-		
-	
-	public Instances randomize (Instances data, int seed) throws Exception
-	{
-		 Random rand = new Random(seed);   // create seeded number generator
-		 Instances randData = new Instances(data);   // create copy of original data
-		 randData.randomize(rand);		 
-		 return randData;
-	}
+	}		
 }
