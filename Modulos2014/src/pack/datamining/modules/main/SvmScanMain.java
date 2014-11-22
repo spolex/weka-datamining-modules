@@ -32,7 +32,7 @@ public class SvmScanMain {
 		int pGMax=4;
 		if(args.length>1)
 		{
-			System.out.println("Configurando el algoritmo");
+			 System.out.println("Configurando el algoritmo");
 			 pTrainData = LoaderSaver.getMyLoader().loadArff(args[0]);
 			 pDevData = LoaderSaver.getMyLoader().loadArff(args[1]);
 			 if(args.length>2)

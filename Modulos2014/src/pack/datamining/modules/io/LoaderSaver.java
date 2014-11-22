@@ -1,9 +1,11 @@
 package pack.datamining.modules.io;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,5 +95,39 @@ public class LoaderSaver
 		{
 			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_IO_FAIL);
 		}
+	}
+	/**
+	 * 
+	 * @param FilePath = String, indica la ruta del archivo.
+	 * @param FileContent = String, indica el contenido del archivo
+	 * @param CleanFileContent = boolean.Si true y existe el archivo borra el contenido, 
+	 * 			si false, añade el contenido al final del archivo.
+	 * @return true si se guarda con éxito, false en caso contrario.
+	 * 
+	 * fuente : http://www.creatusoftware.com/index.php?option=com_content&view=article&id=142:funcion-para-guardar-un-archivo-en-java&catid=62:fuentes-java&Itemid=41
+	 */
+	
+	public boolean SaveFile(String FilePath, String FileContent, boolean CleanFileContent)
+	{
+	 
+	    FileWriter file;
+	    BufferedWriter writer;
+	     
+	    try
+	    {
+	        file = new FileWriter(FilePath, !CleanFileContent);
+	        writer = new BufferedWriter(file);
+	        writer.write(FileContent, 0, FileContent.length());
+	         
+	        writer.close();
+	        file.close();
+	 
+	        return true;
+	    } 
+	    catch (IOException ex) 
+	    {
+	        ex.printStackTrace();
+	        return false;
+	   }
 	}
 }
