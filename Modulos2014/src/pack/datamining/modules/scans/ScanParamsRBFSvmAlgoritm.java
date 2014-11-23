@@ -149,13 +149,16 @@ public class ScanParamsRBFSvmAlgoritm
 		
 		try 
 		{
+			VerboseCutter.getVerboseCutter().cutVerbose();
 			this.mEvaluator=new Multibounds(mTrain);
 			mModel.buildClassifier(mTrain);
+			VerboseCutter.getVerboseCutter().activateVerbose();
 		} 
 		catch (Exception e)
 		{
 			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_EVALUACION+e.getMessage());
 		}
+		
 		mEvaluator.evaluateModel(mModel, mTrain, mDev);		
 		return this.mModel;
 	}
