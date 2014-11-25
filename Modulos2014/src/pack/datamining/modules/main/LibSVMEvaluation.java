@@ -9,6 +9,7 @@ import java.util.Random;
 import pack.datamining.modules.evaluation.Multibounds;
 import pack.datamining.modules.filters.Randomize;
 import pack.datamining.modules.io.LoaderSaver;
+import pack.datamining.modules.util.VerboseCutter;
 import weka.classifiers.functions.LibSVM;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
@@ -57,9 +58,12 @@ public class LibSVMEvaluation {
 
 					pTrainData.setClassIndex(pTrainData.numAttributes()-1);
 					pDevData.setClassIndex(pDevData.numAttributes()-1);
-
+					
+					VerboseCutter.getVerboseCutter().cutVerbose();
 					Multibounds evaluation = new Multibounds(pTrainData);
 					evaluation.dishonestEvaluator(model, pTrainData);
+					VerboseCutter.getVerboseCutter().activateVerbose();
+					
 					String title=("\n\n\nEvaluación no-honesta \n");
 					String bar=("======================================== \n");	
 					String FileContent = experimento+title+bar;
@@ -73,8 +77,11 @@ public class LibSVMEvaluation {
 
 							FileContent=FileContent+summary;
 							LoaderSaver.getMyLoader().SaveFile(dir+"/"+evalName, FileContent, false);
-
+							
+							VerboseCutter.getVerboseCutter().cutVerbose();
 							evaluation.evaluateModel(model,pDevData);
+							VerboseCutter.getVerboseCutter().activateVerbose();
+							
 							title=("\n\nEvaluación hold-out con dev \n");					
 							FileContent = title+bar;				
 							summary = evaluation.toSummaryString() + 
@@ -90,7 +97,11 @@ public class LibSVMEvaluation {
 									allData.addAll(pDevData);
 									Randomize.randomize(allData, 1);
 									model.buildClassifier(allData);
+									
+									VerboseCutter.getVerboseCutter().cutVerbose();
 									evaluation.crossValidateModel(model, allData, 10, new Random(1));
+									VerboseCutter.getVerboseCutter().activateVerbose();
+									
 									title=("\n\nEvaluación 10FCV con dev+train \n");					
 									FileContent = title+bar;				
 									summary = evaluation.toSummaryString() + 

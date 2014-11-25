@@ -61,12 +61,10 @@ public class ScanParamsRBFSvmAlgoritm
 		for (int c = -15; c <= maxOfCSearch; c++) {
 			int percent = (c+15)*100/(maxOfGSearch+15);
 			System.out.println("Barriendo el parámetro cost........"+percent+"%");
-			VerboseCutter.getVerboseCutter().deleteConsole(mUnix);
 			for (int g = -3; g <= maxOfGSearch; g++)
 			{
 				percent = (g+3)*100/(maxOfGSearch+3);
 				System.out.println("Barriendo el parámetro gamma........"+percent+"%");
-				VerboseCutter.getVerboseCutter().deleteConsole(mUnix);
 								
 				//La justificación del uso de potencias de dos se encuentra en el informe practica 3 SAD.				
 				double cost = (Math.pow(2, c));
@@ -137,6 +135,7 @@ public class ScanParamsRBFSvmAlgoritm
 	 */
 	private LibSVM extractEvaluatedModel(double cost, double gamma) 
 	{
+		this.mModel= new LibSVM();
 		this.mModel.setGamma(gamma);
 		this.mModel.setCost(cost);
 		this.mModel.setDegree(0);
@@ -149,10 +148,7 @@ public class ScanParamsRBFSvmAlgoritm
 		
 		try 
 		{
-			VerboseCutter.getVerboseCutter().cutVerbose();
 			this.mEvaluator=new Multibounds(mTrain);
-			mModel.buildClassifier(mTrain);
-			VerboseCutter.getVerboseCutter().activateVerbose();
 		} 
 		catch (Exception e)
 		{

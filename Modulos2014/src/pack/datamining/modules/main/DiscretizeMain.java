@@ -1,9 +1,13 @@
 package pack.datamining.modules.main;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import pack.datamining.modules.filters.Discretization;
+import pack.datamining.modules.filters.Outliers;
 import pack.datamining.modules.io.LoaderSaver;
 import pack.datamining.modules.util.Strings;
 import weka.core.*;
@@ -61,8 +65,15 @@ public class DiscretizeMain {
 		
 		try 
 		{
+			
+			Calendar calendar = new GregorianCalendar(); // Fecha y hora actuales.
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm"); // Formato de la fecha.
+			String dateS = dateFormat.format(calendar.getTime()); // Fecha y hora actuales formateadas.
 			Instances filteredInstances = Discretization.getDiscretized(instances,intervalos ,pos);
-			LoaderSaver.getMyLoader().saveInstances(filteredInstances, args[0] + ".DiscretizedClass.arff" );
+			dateFormat = new SimpleDateFormat("yyyyMMddHH");
+			String dateD =  dateFormat.format(calendar);
+			String filePath=dateD+"/"+args[0].substring(0, args[0].length()-5)+"_"+dateS+"_DiscretizedClass.arff";
+			LoaderSaver.getMyLoader().saveInstances(filteredInstances, filePath );
 		} 
 		catch (Exception e) 
 		{

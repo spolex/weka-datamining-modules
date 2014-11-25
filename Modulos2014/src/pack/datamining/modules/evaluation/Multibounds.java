@@ -145,9 +145,7 @@ public class Multibounds extends Evaluation
 	public void evaluateModel(LibSVM estimador,Instances pTrain,Instances pDev){			
 		try 
 		{	
-			VerboseCutter.getVerboseCutter().cutVerbose();
 			estimador.buildClassifier(pTrain);
-			VerboseCutter.getVerboseCutter().activateVerbose();
 		} 
 		catch (Exception e2) 
 		{
@@ -155,9 +153,7 @@ public class Multibounds extends Evaluation
 		}
 		try 
 		{
-			VerboseCutter.getVerboseCutter().cutVerbose();
 			this.evaluateModel(estimador, pDev);
-			VerboseCutter.getVerboseCutter().activateVerbose();
 		} 
 		catch (Exception e)
 		{
