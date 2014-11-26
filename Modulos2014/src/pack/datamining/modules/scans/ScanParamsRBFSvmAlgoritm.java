@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import pack.datamining.modules.evaluation.Multibounds;
 import pack.datamining.modules.util.Strings;
+import pack.datamining.modules.util.VerboseCutter;
 import weka.classifiers.functions.LibSVM;
 import weka.core.Instances;
 import weka.core.SelectedTag;
@@ -30,11 +31,11 @@ public class ScanParamsRBFSvmAlgoritm
 	// Variables para comparar la f-measure en curso con la f-measure de la vuelta anterior.
 	protected double mFmeasureAux = 0.0;
 	protected double mFmeasureBest = 0.0;
-	private	int maxOfCSearch; //Hasta  que valor es óptimo C "barrer"??11
-	private	int maxOfGSearch;  //Hasta  que valor es óptimo	4
+	protected	int maxOfCSearch; //Hasta  que valor es óptimo C "barrer"??11
+	protected	int maxOfGSearch;  //Hasta  que valor es óptimo	4
 	
-	private double bestG;
-	private double bestC;
+	protected double bestG;
+	protected double bestC;
 	
 	//Variable para Logger y la salida por pantalla
 	String mSoNombre;
@@ -64,11 +65,14 @@ public class ScanParamsRBFSvmAlgoritm
 			{
 				percent = (g+3)*100/(maxOfGSearch+3);
 				System.out.println("Barriendo el parámetro gamma........"+percent+"%");
-								
+				
 				//La justificación del uso de potencias de dos se encuentra en el informe practica 3 SAD.				
 				double cost = (Math.pow(2, c));
 				double gamma = (Math.pow(2, g));
+				
+				VerboseCutter.getVerboseCutter().cutVerbose();	
 				extractEvaluatedModel(cost, gamma);
+				VerboseCutter.getVerboseCutter().activateVerbose();
 
 				mFmeasureAux = mEvaluator.fMeasure(0);
 				if (mFmeasureAux > mFmeasureBest)
@@ -86,6 +90,7 @@ public class ScanParamsRBFSvmAlgoritm
 		//La justificación del uso de potencias de dos se encuentra en el informe practica 3 SAD.				
 		double cost = (Math.pow(2, bestC));
 		double gamma = (Math.pow(2, bestG));
+		
 		extractEvaluatedModel(cost, gamma);
 		
 		System.out.println("Serializando el modelo....");
@@ -135,16 +140,16 @@ public class ScanParamsRBFSvmAlgoritm
 	protected LibSVM extractEvaluatedModel(double cost, double gamma) 
 	{
 		this.mModel= new LibSVM();
-		this.mModel.setGamma(gamma);
-		this.mModel.setCost(cost);
-		this.mModel.setDegree(0);
+		
 		//Utilizamos C-SVC
 		mModel.setSVMType(new SelectedTag(0, LibSVM.TAGS_SVMTYPE));
 		
 		//Establecemos el kernel RBF justiificado en el informe práctica 3 SAD
 		mModel.setKernelType(new SelectedTag(2,LibSVM.TAGS_KERNELTYPE));
 		
-		
+		this.mModel.setGamma(gamma);
+		this.mModel.setCost(cost);
+		this.mModel.setDegree(0);		
 		try 
 		{
 			this.mEvaluator=new Multibounds(mTrain);
@@ -196,7 +201,8 @@ public class ScanParamsRBFSvmAlgoritm
 		maxOfGSearch = pGMax;  //Hasta  que valor es óptimo	4
 		
 		bestC=-15;
-		bestG=-3;		
+		bestG=-3;
+		
 	}
 	
 	
