@@ -60,9 +60,16 @@ public class DiscretizeMain {
 						pos = Integer.valueOf(args[4]);
 					}
 				}
-
+				
+			try {
+				instances = Discretization.getDiscretized(instances, intervalos, pos);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			LoaderSaver.getMyLoader().saveInstances(instances, args[0] + "discretized.arff");
 		}
-		
+		/*
 		try 
 		{
 			
@@ -77,8 +84,8 @@ public class DiscretizeMain {
 		} 
 		catch (Exception e) 
 		{
-			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_OUTLIERS+e.getMessage());
-		}
+		Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_OUTLIERS+e.getMessage());
+		}*/
 	
 
 	}
