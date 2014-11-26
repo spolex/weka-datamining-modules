@@ -60,8 +60,8 @@ public class DiscretizeMain {
 						pos = Integer.valueOf(args[4]);
 					}
 				}
-				
-		/*	try {
+
+				/*	try {
 				instances = Discretization.getDiscretized(instances, intervalos, pos);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -69,22 +69,14 @@ public class DiscretizeMain {
 			}
 			LoaderSaver.getMyLoader().saveInstances(instances, args[0] + "discretized.arff");*/
 		}
-		
 		try 
 		{
-			
-			Calendar calendar = new GregorianCalendar(); // Fecha y hora actuales.
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm"); // Formato de la fecha.
-			String dateS = dateFormat.format(calendar.getTime()); // Fecha y hora actuales formateadas.
-			Instances filteredInstances = Discretization.getDiscretized(instances,intervalos ,pos);
-			dateFormat = new SimpleDateFormat("yyyyMMddHH");
-			String dateD =  dateFormat.format(calendar.getTime());
-			String filePath="data/Discretized_"+dateD+"/"+args[0].substring(4, args[0].length()-5)+"_"+dateS+"_DiscretizedClass.arff";
-			LoaderSaver.getMyLoader().saveInstances(filteredInstances, filePath );
+			String pathFile =args[0];			
+			LoaderSaver.extractFileInDateDir(instances, 4, pathFile.length(), pathFile,"Discretized");
 		} 
 		catch (Exception e) 
 		{
-		Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_OUTLIERS+e.getMessage());
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_OUTLIERS+e.getMessage());
 		}
 	}
-	}
+}
