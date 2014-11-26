@@ -1,13 +1,9 @@
 package pack.datamining.modules.main;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import pack.datamining.modules.filters.Discretization;
-import pack.datamining.modules.filters.Outliers;
 import pack.datamining.modules.io.LoaderSaver;
 import pack.datamining.modules.util.Strings;
 import weka.core.*;
@@ -71,8 +67,9 @@ public class DiscretizeMain {
 		}
 		try 
 		{
+			instances = Discretization.getDiscretized(instances, intervalos, pos);
 			String pathFile =args[0];			
-			LoaderSaver.extractFileInDateDir(instances, 4, pathFile.length(), pathFile,"Discretized");
+			LoaderSaver.extractFileInDateDir(instances,0 , pathFile.length(), pathFile,"Discretized");
 		} 
 		catch (Exception e) 
 		{
