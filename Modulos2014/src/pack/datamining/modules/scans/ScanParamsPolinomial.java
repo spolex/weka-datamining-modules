@@ -10,7 +10,12 @@ public class ScanParamsPolinomial extends ScanParamsRBFSvmAlgoritm {
 	}
 	
 	@Override
-	protected void configureModel(int pCmax, int pGMax) {		
+	protected void configureModel(int pCmax, int pGMax) {	
+		super.configureModel(pCmax, pGMax);
+		this.mModel= new LibSVM();
+		
+		
+		
 	}
 	
 	@Override

@@ -30,7 +30,7 @@ public class ResampleMain {
 				String pathFile =args[0];			
 				try 
 				{
-					LoaderSaver.extractFileInDateDir(filteredInstances,0 , pathFile.length(), pathFile,"Resample");
+					LoaderSaver.extractFileInDateDir(filteredInstances,pathFile,"Resample");
 					System.out.println("Instancias balanceadas");
 				} 
 				catch (Exception e) 

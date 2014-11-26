@@ -69,7 +69,7 @@ public class DiscretizeMain {
 		{
 			instances = Discretization.getDiscretized(instances, intervalos, pos);
 			String pathFile =args[0];			
-			LoaderSaver.extractFileInDateDir(instances,0 , pathFile.length(), pathFile,"Discretized");
+			LoaderSaver.extractFileInDateDir(instances,pathFile,"Discretized");
 		} 
 		catch (Exception e) 
 		{

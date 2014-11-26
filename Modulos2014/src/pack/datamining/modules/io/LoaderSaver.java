@@ -13,7 +13,6 @@ import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import pack.datamining.modules.filters.Discretization;
 import pack.datamining.modules.util.Strings;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
@@ -142,15 +141,13 @@ public class LoaderSaver
 	 * @param pathFile
 	 * @throws Exception
 	 */
-	public static void extractFileInDateDir(Instances instances, int desde,
-			int hasta, String pathFile,String filter) throws Exception {
+	public static void extractFileInDateDir(Instances instances,String pathFile,String filter) throws Exception {
 		Calendar calendar = new GregorianCalendar(); // Fecha y hora actuales.
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm"); // Formato de la fecha.
 		String dateS = dateFormat.format(calendar.getTime()); // Fecha y hora actuales formateadas.
-		Instances filteredInstances = Discretization.getDiscretized(instances,desde ,hasta);
 		dateFormat = new SimpleDateFormat("yyyyMMddHH");
 		String dateD =  dateFormat.format(calendar.getTime());
 		String filePath="data/"+filter+"_"+dateD+"/"+pathFile.substring(4, pathFile.length()-5)+"_"+dateS+"_"+filter+"Class.arff";
-		LoaderSaver.getMyLoader().saveInstances(filteredInstances, filePath );
+		LoaderSaver.getMyLoader().saveInstances(instances, filePath );
 	}
 }

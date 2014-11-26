@@ -22,7 +22,7 @@ public class OutLiersMain
 		try 
 		{
 			String pathFile=args[0];
-			LoaderSaver.extractFileInDateDir(instances, 0, pathFile.length(), pathFile,"Outlier");
+			LoaderSaver.extractFileInDateDir(instances,pathFile,"Outlier");
 		} 
 		catch (Exception e) 
 		{

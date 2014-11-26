@@ -21,15 +21,15 @@ import weka.core.SerializationHelper;
  */
 public class ScanParamsRBFSvmAlgoritm
 {
-	private Instances mTrain;
-	private Instances mDev;
-	private LibSVM mModel;
-	private Multibounds mEvaluator;
-	private File mModels;
+	protected Instances mTrain;
+	protected Instances mDev;
+	protected LibSVM mModel;
+	protected Multibounds mEvaluator;
+	protected File mModels;
 	
 	// Variables para comparar la f-measure en curso con la f-measure de la vuelta anterior.
-	private double mFmeasureAux = 0.0;
-	private double mFmeasureBest = 0.0;
+	protected double mFmeasureAux = 0.0;
+	protected double mFmeasureBest = 0.0;
 	private	int maxOfCSearch; //Hasta  que valor es óptimo C "barrer"??11
 	private	int maxOfGSearch;  //Hasta  que valor es óptimo	4
 	
