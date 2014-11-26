@@ -59,7 +59,7 @@ public class ScanParamsRBFSvmAlgoritm
 		configureModel(pCmax, pGMax);
 		
 		for (int c = -15; c <= maxOfCSearch; c++) {
-			int percent = (c+15)*100/(maxOfGSearch+15);
+			int percent = (c+15)*100/(maxOfCSearch+15);
 			System.out.println("Barriendo el parámetro cost........"+percent+"%");
 			for (int g = -3; g <= maxOfGSearch; g++)
 			{

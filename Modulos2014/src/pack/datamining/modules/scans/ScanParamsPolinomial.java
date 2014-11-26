@@ -88,7 +88,7 @@ public class ScanParamsPolinomial extends ScanParamsRBFSvmAlgoritm {
 		{
 			int percent = (d-2)*100/(maxOfDegreeSearch-2);
 			for (int c = -15; c <= maxOfCSearch; c++) {
-				percent = (c+15)*100/(maxOfGSearch+15);
+				percent = (c+15)*100/(maxOfCSearch+15);
 				System.out.println("Barriendo el parámetro degree........"+percent+"%");
 				System.out.println("Barriendo el parámetro cost........"+percent+"%");
 				for (int g = -3; g <= maxOfGSearch; g++)
