@@ -79,7 +79,7 @@ public class DiscretizeMain {
 			Instances filteredInstances = Discretization.getDiscretized(instances,intervalos ,pos);
 			dateFormat = new SimpleDateFormat("yyyyMMddHH");
 			String dateD =  dateFormat.format(calendar.getTime());
-			String filePath="Discretized_"+dateS+"/"+args[0].substring(4, args[0].length()-5)+"_"+dateS+"_DiscretizedClass.arff";
+			String filePath="Discretized_"+dateD+"/"+args[0].substring(4, args[0].length()-5)+"_"+dateS+"_DiscretizedClass.arff";
 			LoaderSaver.getMyLoader().saveInstances(filteredInstances, filePath );
 		} 
 		catch (Exception e) 
