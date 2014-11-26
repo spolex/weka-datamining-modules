@@ -43,10 +43,7 @@ public class LibSVMEvaluation {
 				try 
 				{
 
-					String dir = "EvaluationsDirectory";
-					File evalDir = new File(dir);
 					
-					if(!evalDir.exists() || !evalDir.isDirectory())evalDir.mkdirs();
 					Calendar calendar = new GregorianCalendar(); // Fecha y hora actuales.
 					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm"); // Formato de la fecha.
 					String dateS = dateFormat.format(calendar.getTime()); // Fecha y hora actuales formateadas.	
@@ -55,6 +52,10 @@ public class LibSVMEvaluation {
 					dateS = dateFormat.format(calendar.getTime());
 					dateFormat = new SimpleDateFormat("yyyyMMddHH"); // Formato de la fecha.
 					String dateD = dateFormat.format(calendar.getTime());
+					
+					String dir = "EvaluationsDirectory/"+dateD;
+					File evalDir = new File(dir);					
+					if(!evalDir.exists() || !evalDir.isDirectory())evalDir.mkdirs();
 
 
 					String experimento = "Evaluaciones para el modelo"+model.getClass().getSimpleName()+"\t\t"+model.getKernelType()+"\t\t"
@@ -82,7 +83,7 @@ public class LibSVMEvaluation {
 
 
 							FileContent=FileContent+summary;
-							LoaderSaver.getMyLoader().SaveFile(dir+"/"+dateD+"/"+evalName, FileContent, false);
+							LoaderSaver.getMyLoader().SaveFile(dir+"/"+evalName, FileContent, false);
 							
 							evaluation.evaluateModel(model,pDevData);
 							
@@ -99,7 +100,7 @@ public class LibSVMEvaluation {
 									+bar
 									+evaluation.toClassDetailsString();;
 									FileContent=FileContent+summary;
-									LoaderSaver.getMyLoader().SaveFile(dir+"/"+dateD+"/"+evalName, FileContent, false);
+									LoaderSaver.getMyLoader().SaveFile(dir+"/"+evalName, FileContent, false);
 
 									Instances allData = pTrainData;
 									allData.addAll(pDevData);
@@ -122,7 +123,7 @@ public class LibSVMEvaluation {
 											+evaluation.toClassDetailsString();
 											FileContent=FileContent+summary;
 											
-											LoaderSaver.getMyLoader().SaveFile(dir+"/"+dateD+"/"+evalName, FileContent, false);
+											LoaderSaver.getMyLoader().SaveFile(dir+"/"+evalName, FileContent, false);
 				} 
 				catch (Exception e) 
 				{

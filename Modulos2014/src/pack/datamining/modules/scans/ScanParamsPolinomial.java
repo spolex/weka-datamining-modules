@@ -112,6 +112,7 @@ public class ScanParamsPolinomial extends ScanParamsRBFSvmAlgoritm {
 				}
 				System.out.println("Fin barrido para cost="+c);
 			}
+			System.out.println("Fin barrido para degree="+d);
 		}
 		System.out.println("Barrido ah-hoc finalizado");
 

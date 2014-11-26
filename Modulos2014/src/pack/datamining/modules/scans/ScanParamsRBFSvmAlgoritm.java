@@ -84,6 +84,7 @@ public class ScanParamsRBFSvmAlgoritm
 		}
 		System.out.println("Barrido ah-hoc finalizado");
 
+		//TODO devolver LibSVM y serializar .model en main
 		this.mModel= new LibSVM();
 		System.out.println("Configurando el modelo a serializar....");
 		
@@ -153,13 +154,15 @@ public class ScanParamsRBFSvmAlgoritm
 		try 
 		{
 			this.mEvaluator=new Multibounds(mTrain);
+			//mModel.buildClassifier(mTrain); //TODO probar si no falla para ahorrar coste de ejecución
 		} 
 		catch (Exception e)
 		{
 			Logger.getLogger(LOG_TAG).log(Level.SEVERE, Strings.MSG_ERROR_EVALUACION+e.getMessage());
 		}
 		
-		mEvaluator.evaluateModel(mModel, mTrain, mDev);		
+		mEvaluator.evaluateModel(mModel, mTrain, mDev);
+		//mModel.buildClassifier(mTrain);
 		return this.mModel;
 	}
 	
