@@ -30,10 +30,11 @@ public class LibSVMEvaluation {
 			pDevData.setClassIndex(0);
 			if(args[2]!=null)
 			{
-				LibSVM model = null;
+				LibSVM model = new LibSVM();
 				try 
 				{
 					model = (LibSVM) SerializationHelper.read(args[2]);
+					//model.setModelFile(new File(args[2]));
 				} 
 				catch (Exception e) 
 				{
@@ -44,16 +45,20 @@ public class LibSVMEvaluation {
 
 					String dir = "EvaluationsDirectory";
 					File evalDir = new File(dir);
+					
 					if(!evalDir.exists() || !evalDir.isDirectory())evalDir.mkdirs();
 					Calendar calendar = new GregorianCalendar(); // Fecha y hora actuales.
 					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm"); // Formato de la fecha.
 					String dateS = dateFormat.format(calendar.getTime()); // Fecha y hora actuales formateadas.	
-					String evalName = dateS+"rbf_svm.eval";
-					
+					String evalName = dateS+"rbf_svm.eval";					
 					dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH:mm"); // Formato de la fecha.
 					dateS = dateFormat.format(calendar.getTime());
+					dateFormat = new SimpleDateFormat("yyyyMMddHH"); // Formato de la fecha.
+					String dateD = dateFormat.format(calendar.getTime());
 
-					String experimento = "Evaluaciones para el modelo"+model.getClass().getSimpleName()+"\t\t"+dateS;
+
+					String experimento = "Evaluaciones para el modelo"+model.getClass().getSimpleName()+"\t\t"+model.getKernelType()+"\t\t"
+					+model.SVMTypeTipText()+dateS;
 
 					pTrainData.setClassIndex(pTrainData.numAttributes()-1);
 					pDevData.setClassIndex(pDevData.numAttributes()-1);
@@ -67,13 +72,17 @@ public class LibSVMEvaluation {
 					String summary = evaluation.toSummaryString() + 
 							"Recall:\t " + evaluation.weightedRecall() + "\nPrecision:\t " + 
 							evaluation.weightedPrecision() + "\n\n" + evaluation.toMatrixString()
-							+"\nC: "+model.getCost()+
-							"\ngamma: "+model.getGamma()
+							+"Parámetros óptimos"
+							+bar
+							+"\n|| C: "+model.getCost()+" ||"+
+							"\n|| gamma: "+model.getGamma()+" ||\n\n"
+							+"\n|| degree: "+model.getDegree()+" ||\n\n"
+							+bar
 							+evaluation.toClassDetailsString();;
 
 
 							FileContent=FileContent+summary;
-							LoaderSaver.getMyLoader().SaveFile(dir+"/"+evalName, FileContent, false);
+							LoaderSaver.getMyLoader().SaveFile(dir+"/"+dateD+"/"+evalName, FileContent, false);
 							
 							evaluation.evaluateModel(model,pDevData);
 							
@@ -82,11 +91,15 @@ public class LibSVMEvaluation {
 							summary = evaluation.toSummaryString() + 
 									"Recall:\t " + evaluation.weightedRecall() + "\nPrecision:\t " + 
 									evaluation.weightedPrecision() + "\n\n" + evaluation.toMatrixString()
-									+"\nC: "+model.getCost()+
-									"\ngamma: "+model.getGamma()
+									+"Parámetros óptimos"
+									+bar
+									+"\n|| C: "+model.getCost()+" ||"+
+									"\n|| gamma: "+model.getGamma()+" ||\n\n"
+									+"\n|| degree: "+model.getDegree()+" ||\n\n"
+									+bar
 									+evaluation.toClassDetailsString();;
 									FileContent=FileContent+summary;
-									LoaderSaver.getMyLoader().SaveFile(dir+"/"+evalName, FileContent, false);
+									LoaderSaver.getMyLoader().SaveFile(dir+"/"+dateD+"/"+evalName, FileContent, false);
 
 									Instances allData = pTrainData;
 									allData.addAll(pDevData);
@@ -100,11 +113,16 @@ public class LibSVMEvaluation {
 									summary = evaluation.toSummaryString() + 
 											"Recall:\t " + evaluation.weightedRecall() + "\nPrecision:\t " + 
 											evaluation.weightedPrecision() + "\n\n" + evaluation.toMatrixString()
-											+"\nC: "+model.getCost()+
-											"\ngamma: "+model.getGamma()
-											+evaluation.toClassDetailsString();;
+											+"Parámetros óptimos"
+											+bar
+											+"\n|| C: "+model.getCost()+" ||"+
+											"\n|| gamma: "+model.getGamma()+" ||\n\n"
+											+"\n|| degree: "+model.getDegree()+" ||\n\n"
+											+bar
+											+evaluation.toClassDetailsString();
 											FileContent=FileContent+summary;
-											LoaderSaver.getMyLoader().SaveFile(dir+"/"+evalName, FileContent, false);
+											
+											LoaderSaver.getMyLoader().SaveFile(dir+"/"+dateD+"/"+evalName, FileContent, false);
 				} 
 				catch (Exception e) 
 				{
