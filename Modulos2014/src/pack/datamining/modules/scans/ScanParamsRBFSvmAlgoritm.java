@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 import pack.datamining.modules.evaluation.Multibounds;
 import pack.datamining.modules.util.Strings;
-import pack.datamining.modules.util.VerboseCutter;
 import weka.classifiers.functions.LibSVM;
 import weka.core.Instances;
 import weka.core.SelectedTag;
@@ -109,7 +108,7 @@ public class ScanParamsRBFSvmAlgoritm
 	/**
 	 * @throws Exception
 	 */
-	private void serializeModel() throws Exception {
+	protected void serializeModel() throws Exception {
 		if(!mModels.exists())mModels.mkdirs();
 		Calendar calendar = new GregorianCalendar(); // Fecha y hora actuales.
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm"); // Formato de la fecha.
@@ -122,7 +121,7 @@ public class ScanParamsRBFSvmAlgoritm
 	 * @param cost
 	 * @param gamma
 	 */
-	private void updateParameters(double cost, double gamma) {
+	protected void updateParameters(double cost, double gamma) {
 		mFmeasureBest = mFmeasureAux;
 		bestC = cost;
 		bestG = gamma;
@@ -133,7 +132,7 @@ public class ScanParamsRBFSvmAlgoritm
 	 * @param cost
 	 * @param gamma
 	 */
-	private LibSVM extractEvaluatedModel(double cost, double gamma) 
+	protected LibSVM extractEvaluatedModel(double cost, double gamma) 
 	{
 		this.mModel= new LibSVM();
 		this.mModel.setGamma(gamma);
@@ -164,7 +163,7 @@ public class ScanParamsRBFSvmAlgoritm
 	 * configura el modelo y las clases necesarias para el barrido ad hoc,
 	 * por el momento además asigna al atributo en la última posición la función de la clase.
 	 */
-	private void configureModel(int pCmax, int pGMax)
+	protected void configureModel(int pCmax, int pGMax)
 	{
 		//Creamos el directorio necesario para serializar los modelos.
 		mModels = new File("Modelos");
