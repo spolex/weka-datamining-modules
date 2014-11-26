@@ -15,6 +15,9 @@ import weka.core.Instances;
 
 public class OutLiersMain 
 {
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) 
 	{
 		//For logs
@@ -29,9 +32,7 @@ public class OutLiersMain
 			Instances filteredInstances = Outliers.getFilterInstancesWithoutOutliers(instances);
 			SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyyMMdd-HH");
 			String dateD =  dateFormat1.format(new GregorianCalendar().getTime());
-			File date = new File("Directorio_"+dateD);
-			if(!date.exists())date.mkdirs();
-			String filePath=dateD+"/"+args[0].substring(0, args[0].length()-5)+"_"+dateS+"_WithoutOutliers.arff";
+			String filePath="data/Outliers_"+dateD+"/"+args[0].substring(4, args[0].length()-5)+"_"+dateS+"_WithoutOutliers.arff";
 			LoaderSaver.getMyLoader().saveInstances(filteredInstances, filePath );
 		} 
 		catch (Exception e) 
