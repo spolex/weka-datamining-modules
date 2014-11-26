@@ -13,12 +13,42 @@ public class AttributeSelectionMain {
 	 */
 	public static void main(String[] args) 
 	{
-		Instances data = LoaderSaver.getMyLoader().loadArff(args[0]);
-		Instances newData = null;
-		data.setClassIndex(data.numAttributes()-1);
+		Instances train, dev, test;
+		
+		train = null;
+		dev = null;
+		test = null;
+		
+		Instances[] out;
+		
+		if(args.length == 1)
+		{
+			train = LoaderSaver.getMyLoader().loadArff(args[0]);
+			
+		}
+		
+		if(args.length == 2)
+		{
+			train = LoaderSaver.getMyLoader().loadArff(args[0]);
+			dev = LoaderSaver.getMyLoader().loadArff(args[1]);
+		}
+		
+		if(args.length == 3)
+		{
+			train = LoaderSaver.getMyLoader().loadArff(args[0]);
+			dev = LoaderSaver.getMyLoader().loadArff(args[1]);
+			test =  LoaderSaver.getMyLoader().loadArff(args[2]);
+		}
+		
+		train.setClassIndex(train.numAttributes()-1);
 		try {
-			newData = AttributeSelect.getAttributeSelection(data);
-			LoaderSaver.getMyLoader().saveInstances(newData, args[0]+ "attSel.arff");
+			out = AttributeSelect.getFilteredData(train, dev, test);
+			if (train != null)
+			LoaderSaver.getMyLoader().saveInstances(out[0], args[0]+ "attSel.arff");
+			if (dev != null)
+				LoaderSaver.getMyLoader().saveInstances(out[1], args[1]+ "attSel.arff");
+			if (test != null)
+				LoaderSaver.getMyLoader().saveInstances(out[2], args[2]+ "attSel.arff");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
