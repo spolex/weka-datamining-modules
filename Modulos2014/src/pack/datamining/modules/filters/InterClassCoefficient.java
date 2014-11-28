@@ -1,5 +1,6 @@
 package pack.datamining.modules.filters;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 
 import weka.core.DistanceFunction;
@@ -11,7 +12,7 @@ public class InterClassCoefficient {
 	private double delta;
 	private DistanceFunction distanceFunction;
 	private Instances instances;
-	private HashMap<Integer, Double> distances;
+	private HashMap<BigInteger, Double> distances;
 	private int instancesNumber;
 	
 	public InterClassCoefficient(Instances pInstances,DistanceFunction pDistance,double pDelta)
@@ -21,41 +22,43 @@ public class InterClassCoefficient {
 		//Almaceno la lista de instancias.
 		this.instances=pInstances;
 		
+		//Inicializo la tabla hash
+		this.distances=new HashMap<BigInteger, Double>();
+		//Almaceno el número de instancias.
+		this.instancesNumber=pInstances.numInstances();
 		//Si no se ha establecido una delta eligo una arbitraria.
+		
 		if(pDelta!=0)
 			this.delta=pDelta;
 		else
-			this.delta=1/2*pInstances.numInstances();
+			this.delta=1/this.instancesNumber;
 		
-		//Hago el cálculo de las distancias.
-		this.inicializeDistances();
-		//Almaceno el número de instancias.
-		this.instancesNumber=pInstances.numInstances();
+
 	}
 	
 	/**
 	 * Función que inicializa el hashmap de distancias
 	 */
-	private void inicializeDistances() {
+	private void initializeDistances() {
 
 		//Almacena el hashcode de la instancia en evaluación.
-		int temporaryInstanceHash;
+		BigInteger temporaryInstanceHash;
 		//Almacena la instancia en evaluación.
 		Instance temporaryInstance;
 		//Almacena la clave propuesta para estar en el hashmap.
-		int temporaryKey;
+		BigInteger temporaryKey;
 		
 		//Para cada instancia
 		for(int i=0;i<this.instancesNumber;i++)
 		{
 			//Almaceno los valores temporales para no tener que hacerlo n veces.
 			temporaryInstance=this.instances.instance(i);
-			temporaryInstanceHash=temporaryInstance.hashCode();
+			temporaryInstanceHash=BigInteger.valueOf(temporaryInstance.hashCode());
 			//Evaluo su distancia con respecto al resto que no hayan sido evaluadas.
-			for(int j=i;j<this.instancesNumber;j++)
+			for(int j=i+1;j<this.instancesNumber;j++)
 			{
 				//Calculo la clave que debería tener la tabla hash.
-				temporaryKey=cantorPairing(temporaryInstanceHash, this.instances.instance(j).hashCode());
+				temporaryKey=cantorPairing(temporaryInstanceHash, BigInteger.valueOf(this.instances.instance(j).hashCode()));
 				//Si no existe esa clave, calculo la distancia e introduzco la clave dentro del HashMap
 				if(!this.distances.containsKey(temporaryKey))
 					distances.put(temporaryKey, distanceFunction.distance(temporaryInstance, this.instances.instance(j)));
@@ -70,6 +73,8 @@ public class InterClassCoefficient {
 	 */
 	public Instances removeOutliers()
 	{
+		//Hago el cálculo de las distancias.
+		this.initializeDistances();
 		//Almacena la mejora conseguida.
 		double distanceImprovement=Double.MAX_VALUE;
 		//Almacena temporalmente la instancia que queda apartada del cálculo.
@@ -111,6 +116,8 @@ public class InterClassCoefficient {
 			}
 			//Calculo la mejora porcentual que supone eliminar la instancia.
 			distanceImprovement=1-(distanceImprovement/baseDistance);
+			
+			System.out.println(distanceImprovement);
 			//Elimino la instancia propuesta al finalizar la evaluación.
 			this.removeInstance(proposedInstance);
 		}
@@ -127,6 +134,7 @@ public class InterClassCoefficient {
 		this.instancesNumber-=1;
 		this.instances.delete(pInstance);
 	}
+	
 	/**
 	 * Dada una lista de instancias, calcula la distancia de cada una de ellas al resto.
 	 * @param pInstances
@@ -136,16 +144,16 @@ public class InterClassCoefficient {
 	private double internalDistance(Instances pInstances)
 	{
 		//Obtengo el hashcode de la instancia en evaluación.
-		int temporaryHash;
+		BigInteger temporaryHash;
 		double distance=0;
 		//Para cada instancia.
 		for(int i=0;i<this.instancesNumber;i++)
 		{
-			temporaryHash=pInstances.instance(i).hashCode();
+			temporaryHash=BigInteger.valueOf(pInstances.instance(i).hashCode());
 			
-			//Acumulo su distancia con el resto extrayendo la distancia de la tabla de distancias
-			for(int j=0;j<this.instancesNumber;j++)
-				distance+=this.distances.get(cantorPairing(this.instances.instance(j).hashCode(),temporaryHash));
+			//Acumulo su distancia con el resto extrayendo la distancia de la tabla de distancias. (i+1, la distancia de una instancia a si misma es 0)
+			for(int j=i+1;j<this.instancesNumber;j++)
+				distance+=this.distances.get(cantorPairing(BigInteger.valueOf(this.instances.instance(j).hashCode()),temporaryHash));
 		}
 		//Retorno la suma de las distancias acumuladas.
 		return distance;
@@ -157,13 +165,13 @@ public class InterClassCoefficient {
 	 * @param pSecond
 	 * @return
 	 */
-	private int cantorPairing(int pFirst,int pSecond)
+	private BigInteger cantorPairing(BigInteger pFirst,BigInteger pSecond)
 	{
-		int maxiumConverted;
-		int miniumConverted;
+		BigInteger maxiumConverted;
+		BigInteger miniumConverted;
 		
 		//Almaceno cual es el mayor de los dos.
-		if(pFirst>pSecond)
+		if(pFirst.subtract(pSecond).compareTo(BigInteger.valueOf(0))==1)
 		{
 			maxiumConverted=pFirst;
 			miniumConverted=pSecond;
@@ -178,7 +186,14 @@ public class InterClassCoefficient {
 		miniumConverted=bijectionZtoN(miniumConverted);
 		
 		//Retorno el valor utilizando la función cantorPairing.
-		return ((1/2)*maxiumConverted*(maxiumConverted+1))+miniumConverted;
+		BigInteger buffer=BigInteger.ZERO;
+		
+		buffer=maxiumConverted.add(miniumConverted);
+		buffer=buffer.divide(BigInteger.valueOf(2));
+		buffer=buffer.add(maxiumConverted.add(miniumConverted).add(BigInteger.valueOf(1)));
+		buffer.add(miniumConverted);
+		
+		return buffer;
 	}
 	
 	/**
@@ -186,9 +201,9 @@ public class InterClassCoefficient {
 	 * @param pFirst
 	 * @return
 	 */
-	private int bijectionZtoN(int pFirst)
+	private BigInteger bijectionZtoN(BigInteger pFirst)
 	{
-		if(pFirst<=0) return -2*pFirst; else return 2*pFirst-1;
+		if(pFirst.signum()==-1) return pFirst.multiply(BigInteger.valueOf(-2)); else return pFirst.multiply(BigInteger.valueOf(2)).subtract(BigInteger.valueOf(1));
 	}
 	
 
