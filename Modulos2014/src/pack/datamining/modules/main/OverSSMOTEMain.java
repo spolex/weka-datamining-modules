@@ -8,6 +8,7 @@ public class OverSSMOTEMain {
 	public static void main(String[] args) throws Exception {
 		
 		Instances instances = LoaderSaver.getMyLoader().loadArff(args[0]);
+		instances.setClassIndex(instances.numAttributes()-1);
 		double percentage = Double.parseDouble(args[1]);
 		int knn= Integer.parseInt(args[2]);
 		
