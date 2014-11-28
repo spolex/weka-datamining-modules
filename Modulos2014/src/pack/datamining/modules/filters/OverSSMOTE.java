@@ -10,27 +10,32 @@ import weka.filters.supervised.instance.SMOTE;
  *
  */
 public class OverSSMOTE {
-	private static SMOTE mSMOTEr= new SMOTE();
-	
+	private static OverSSMOTE mOverSSMOTEr= new OverSSMOTE();
+	private SMOTE mSMOTEr;
 	public OverSSMOTE()
 	{
-
+			this.mSMOTEr = new SMOTE();
 	}
 	
 	public void applySMOTE(Instances pInstances,double pPercentage, int pKNN) throws Exception
 	{
 		//Establezco los vecinos más próximos
-		mSMOTEr.setNearestNeighbors(pKNN);
+		this.getmSMOTEr().setNearestNeighbors(pKNN);
 		//Establezco el porcentaje de SMOTE
-		mSMOTEr.setPercentage(pPercentage);
+		this.getmSMOTEr().setPercentage(pPercentage);
 		//Indico el formato de la entrada
-		mSMOTEr.setInputFormat(pInstances);
+		this.getmSMOTEr().setInputFormat(pInstances);
 		
 		//Ejecuto el filtro sobre los datos dados.
 		Filter.useFilter(pInstances, mSMOTEr);
 	}
 
-	public static SMOTE getmSMOTEr() {
+	public static OverSSMOTE getOverSSMOTE()
+	{
+		return mOverSSMOTEr;
+	}
+	
+	private  SMOTE getmSMOTEr() {
 		return mSMOTEr;
 	}
 }
