@@ -17,7 +17,7 @@ public class OverSSMOTE {
 			this.mSMOTEr = new SMOTE();
 	}
 	
-	public void applySMOTE(Instances pInstances,double pPercentage, int pKNN) throws Exception
+	public Instances applySMOTE(Instances pInstances,double pPercentage, int pKNN) throws Exception
 	{
 		//Establezco los vecinos más próximos
 		this.getmSMOTEr().setNearestNeighbors(pKNN);
@@ -27,7 +27,8 @@ public class OverSSMOTE {
 		this.getmSMOTEr().setInputFormat(pInstances);
 		
 		//Ejecuto el filtro sobre los datos dados.
-		Filter.useFilter(pInstances, mSMOTEr);
+		return Filter.useFilter(pInstances, mSMOTEr);
+		
 	}
 
 	public static OverSSMOTE getOverSSMOTE()

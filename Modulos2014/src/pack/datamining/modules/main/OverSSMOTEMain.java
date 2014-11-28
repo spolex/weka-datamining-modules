@@ -12,8 +12,8 @@ public class OverSSMOTEMain {
 		double percentage = Double.parseDouble(args[1]);
 		int knn= Integer.parseInt(args[2]);
 		
-		OverSSMOTE.getOverSSMOTE().applySMOTE(instances,percentage,knn);
-		LoaderSaver.getMyLoader().saveInstances(instances, args[0]+"SMOTEd.arff");
+		Instances newInstances = OverSSMOTE.getOverSSMOTE().applySMOTE(instances,percentage,knn);
+		LoaderSaver.getMyLoader().saveInstances(newInstances, args[0]+"SMOTEd.arff");
 		
 	}
 
