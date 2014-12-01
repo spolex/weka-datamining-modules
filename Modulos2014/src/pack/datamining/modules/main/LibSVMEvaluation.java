@@ -11,6 +11,7 @@ import pack.datamining.modules.filters.Randomize;
 import pack.datamining.modules.io.LoaderSaver;
 import weka.classifiers.functions.LibSVM;
 import weka.core.Instances;
+import weka.core.SelectedTag;
 import weka.core.SerializationHelper;
 
 /**
@@ -47,7 +48,7 @@ public class LibSVMEvaluation {
 					Calendar calendar = new GregorianCalendar(); // Fecha y hora actuales.
 					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm"); // Formato de la fecha.
 					String dateS = dateFormat.format(calendar.getTime()); // Fecha y hora actuales formateadas.	
-					String evalName = dateS+"rbf_svm.eval";					
+					String evalName = dateS+model.getClass().getSimpleName().toString()+".eval";					
 					dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH:mm"); // Formato de la fecha.
 					dateS = dateFormat.format(calendar.getTime());
 					dateFormat = new SimpleDateFormat("yyyyMMddHH"); // Formato de la fecha.
@@ -57,9 +58,15 @@ public class LibSVMEvaluation {
 					File evalDir = new File(dir);					
 					if(!evalDir.exists() || !evalDir.isDirectory())evalDir.mkdirs();
 
-
-					String experimento = "Evaluaciones para el modelo"+model.getClass().getSimpleName()+"\t\t"+model.getKernelType()+"\t\t"
-					+model.SVMTypeTipText()+dateS;
+					SelectedTag svmtype=null;
+					SelectedTag kernel = null;
+					if(model instanceof LibSVM){
+						svmtype = model.getSVMType();
+						kernel = model.getKernelType();
+					}
+					
+					String experimento = "Evaluaciones para el modelo"+model.getClass().getSimpleName().toString()+"\t\t"+svmtype+"\t\t"
+					+kernel+dateS;
 
 					pTrainData.setClassIndex(pTrainData.numAttributes()-1);
 					pDevData.setClassIndex(pDevData.numAttributes()-1);

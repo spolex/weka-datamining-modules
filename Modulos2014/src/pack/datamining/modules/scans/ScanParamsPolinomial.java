@@ -86,14 +86,14 @@ public class ScanParamsPolinomial extends ScanParamsRBFSvmAlgoritm {
 
 		for (int d=2;d<maxOfDegreeSearch;d++)
 		{
-			int percent = (d-2)*100/(maxOfDegreeSearch-2);
+			int percent = (d)*100/(maxOfDegreeSearch-2);
 			for (int c = -15; c <= maxOfCSearch; c++) {
-				percent = (c+15)*100/(maxOfCSearch+15);
+				percent = (c+15)*100/(maxOfCSearch+30);
 				System.out.println("Barriendo el parámetro degree........"+percent+"%");
 				System.out.println("Barriendo el parámetro cost........"+percent+"%");
 				for (int g = -3; g <= maxOfGSearch; g++)
 				{
-					percent = (g+3)*100/(maxOfGSearch+3);
+					percent = (g+3)*100/(maxOfGSearch+6);
 					System.out.println("Barriendo el parámetro gamma........"+percent+"%");
 
 					//La justificación del uso de potencias de dos se encuentra en el informe practica 3 SAD.				
@@ -105,12 +105,14 @@ public class ScanParamsPolinomial extends ScanParamsRBFSvmAlgoritm {
 					VerboseCutter.getVerboseCutter().activateVerbose();
 
 					mFmeasureAux = mEvaluator.fMeasure(0);
+					System.out.println("Nueva f-measure: " +mFmeasureAux);
 					if (mFmeasureAux > mFmeasureBest)
 					{
+						
 						updateParameters(cost, gamma, d);
 					}
 				}
-				System.out.println("Fin barrido para cost="+c);
+				System.out.println("Fin barrido para cost="+Math.pow(2, c));
 			}
 			System.out.println("Fin barrido para degree="+d);
 		}
@@ -148,6 +150,10 @@ public class ScanParamsPolinomial extends ScanParamsRBFSvmAlgoritm {
 		bestG = gamma;
 		bestD = degree;
 		System.out.println(Strings.MSG_V_CHANGE_FMEASURE);
+		System.out.println("cost ="+cost);
+		System.out.println("gamma ="+gamma);
+		System.out.println("degree ="+degree);
+
 	}
 	
 }
