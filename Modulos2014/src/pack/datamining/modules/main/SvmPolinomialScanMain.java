@@ -3,9 +3,9 @@ package pack.datamining.modules.main;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import pack.datamining.deprecated.ScanParamsPolinomial;
 import pack.datamining.modules.filters.Randomize;
 import pack.datamining.modules.io.LoaderSaver;
-import pack.datamining.modules.scans.ScanParamsPolinomial;
 import pack.datamining.modules.util.Strings;
 import weka.core.Instances;
 
