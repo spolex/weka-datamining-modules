@@ -25,6 +25,7 @@ public class ScanParamsRandomForest {
 	private double mFmeasureBest = 0.0;
 	private int bestI = 0;
 	private int bestK = 0;
+	
 
 	public ScanParamsRandomForest(Instances pTrainData, Instances pDevData)
 	{
@@ -50,12 +51,30 @@ public class ScanParamsRandomForest {
 		}
 		if (maxK == 0)
 		{
-			maxK = mTrain.numAttributes();
+			maxK = Math.sqrt(mTrain.numAttributes()).intValue();
 			
-			//TODO ídem
+			/*
+			 * The main parameters to adjust when using these methods is n_estimators 
+			 * and max_features. The former is the number of trees in the forest. The 
+			 * larger the better, but also the longer it will take to compute. In addition, 
+			 * note that results will stop getting significantly better beyond a critical 
+			 * number of trees. The latter is the size of the random subsets of features 
+			 * to consider when splitting a node. The lower the greater the reduction of 
+			 * variance, but also the greater the increase in bias. Empirical good default
+			 * values are max_features=n_features for regression problems, and 
+			 * max_features=sqrt(n_features) for classification tasks (where n_features is
+			 * the number of features in the data). 
+			 * 
+			 * fuente: http://scikit-learn.org/stable/modules/ensemble.html
+			 */
+			
 		}
 		
 		configureModel();
+		
+		double previousBestFmeasure = 0.0;
+		
+		
 		for (int i = minI; i<maxI; i++)
 		{
 			mModel.setNumTrees(i);
@@ -76,6 +95,21 @@ public class ScanParamsRandomForest {
 					 bestI = i;
 					 bestK = k;
 				}
+			}
+			
+			//si estamos en un múltiplo de 10 de nº de árboles (se va comprobar cada 10 en 10)
+			
+			if (i % 10 == 0 && previousBestFmeasure != 0)
+			{
+				if (shouldStop(mFmeasureBest, previousBestFmeasure))
+				{
+					i = maxI;
+				}
+				previousBestFmeasure = mFmeasureBest;
+			}
+			else if (previousBestFmeasure == 0)
+			{
+				previousBestFmeasure = mFmeasureBest;
 			}
 		}
 		
@@ -161,6 +195,18 @@ public class ScanParamsRandomForest {
 		
 		
 		return this.mModel;
+	}
+	
+	private boolean shouldStop(double fMeasNew, double fMeasPrev)
+	{
+		/*
+		 *  
+		 */
+		
+		if (fMeasNew - fMeasPrev < 0.05)
+			return true;
+		else
+			return false;
 	}
 	
 	
