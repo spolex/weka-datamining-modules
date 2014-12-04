@@ -51,7 +51,8 @@ public class ScanParamsRandomForest {
 		}
 		if (maxK == 0)
 		{
-			maxK = Math.sqrt(mTrain.numAttributes()).intValue();
+			maxK = Double.valueOf(Math.sqrt(Double.valueOf(mTrain.numAttributes()))).intValue();
+			// me encanta hacer casting numérico en Java :D okno
 			
 			/*
 			 * The main parameters to adjust when using these methods is n_estimators 
