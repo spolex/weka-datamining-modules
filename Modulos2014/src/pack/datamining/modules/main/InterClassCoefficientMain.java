@@ -11,9 +11,10 @@ public class InterClassCoefficientMain {
 		
 		
 		Instances instances = LoaderSaver.getMyLoader().loadArff(args[0]);
+		instances.setClassIndex(instances.numAttributes()-1);
 		EuclideanDistance distance = new EuclideanDistance(instances);
 		distance.setDontNormalize(true);
-		InterClassCoefficient icc=new InterClassCoefficient(instances, distance, 0);
+		InterClassCoefficient icc=new InterClassCoefficient(instances, distance,Integer.parseInt(args[1]));
 		Instances newInstances=icc.removeOutliers();
 		
 		LoaderSaver.getMyLoader().saveInstances(newInstances, args[0]+"ICC.arff");
