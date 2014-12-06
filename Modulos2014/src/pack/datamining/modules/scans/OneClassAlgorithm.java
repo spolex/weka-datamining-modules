@@ -46,16 +46,38 @@ public class OneClassAlgorithm {
 		this.model = new LibSVM();
 	}
 	
-	public void getModelTrained() {
+	/**
+	 * Realiza el barrido de parámetros, crea un modelo evaluador y devuelve las instancias positivas (los outliers).
+	 * @return Instances: conjunto de instancias reconocidas como positivas.
+	 */
+	public Instances getModelTrained() {
+		Instances data = null;
 		this.scanParams();
 		this.evaluateModel();		
 		this.createFiles();
+		try {
+			data = this.getIncorrectDataset();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
 	}
 	
-	public void performTest() {
+	/**
+	 * Realiza el barrido de parámetros y realiza el test final en busca de las instancias positivas (los outliers).
+	 * @return Instances: conjunto de instancias reconocidas como positivas.
+	 */
+	public Instances performTest() {
+		Instances data = null;
 		this.scanParams();
 		this.doFinalTest();
 		this.createFiles();
+		try {
+			data = this.getIncorrectDataset();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
 	}
 
 	/**
@@ -75,6 +97,9 @@ public class OneClassAlgorithm {
 		return data;
 	}
 	
+	/**
+	 * Crea los ficheros .model y los datos acerca de la evaluación.
+	 */
 	private void createFiles() {
 		if(!this.models.exists())
 			this.models.mkdirs();
@@ -240,6 +265,21 @@ public class OneClassAlgorithm {
 	    for (int i = 0; i < train.numInstances(); i++) {
 	    	double pred = model.classifyInstance(train.instance(i));
 	    	if (pred == train.instance(i).classValue())
+	    	   newData.add(train.instance(i));
+	    }
+	    return newData;
+	}
+	
+	/**
+	 * Recupera las instancias clasificadas incorrectamente y las devuelve en un nuevo conjunto.
+	 * @return Instances: conjunto de instancias clasificadas incorrectamente.
+	 * @throws Exception: si no es capaz de reclasificar una instancia.
+	 */
+	private Instances getIncorrectDataset() throws Exception {
+		Instances newData = new Instances(train, 0);
+	    for (int i = 0; i < train.numInstances(); i++) {
+	    	double pred = model.classifyInstance(train.instance(i));
+	    	if (pred != train.instance(i).classValue())
 	    	   newData.add(train.instance(i));
 	    }
 	    return newData;

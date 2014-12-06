@@ -35,7 +35,10 @@ public class OneClassMain {
 			test = LoaderSaver.getMyLoader().loadArff(args[2]);
 			System.out.println("\n--- Instancias leídas. ---");
 		} else { // Error.
-			System.out.println(Strings.MSG_ERROR_NUMS_ARGS);
+			System.out.println(Strings.MSG_ERROR_NUMS_ARGS + ".");
+			System.out.println("1. Para buscar outliers: parámetro único, ruta con el fichero con las instancias.");
+			System.out.println("2. Para realizar modelo: dos parámetros, ruta de las instancias de entrenamiento y ruta de las instancias Dev.");
+			System.out.println("3. Para buscar outliers: tres parámetros, ruta de las instancias de entrenamiento, ruta de las instancias Dev y ruta de instancias de test.");
 			return;
 		}
 		
@@ -61,8 +64,17 @@ public class OneClassMain {
 				}
 				
 				OneClassAlgorithm svmScan = new OneClassAlgorithm(train, dev);
-				svmScan.getModelTrained();
+				Instances data = svmScan.getModelTrained();
+
+				try {
+					data = OneClassFilters.getInstance().removeArtificialAttribute(data);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				
+				LoaderSaver.getMyLoader().saveInstances(data, args[0].substring(0, args[0].length() - 5) + "-Positivos.arff");
+				
+				System.out.println("\nNuevo fichero: " + args[0].substring(0, args[0].length() - 5) + "-Positivos.arff");
 				System.out.println("\n--- Modelo One-class optimizado. ---");
 			} else {
 				System.out.println("\n¡¡¡ Error al crear el modelo !!!");
@@ -94,7 +106,7 @@ public class OneClassMain {
 					e.printStackTrace();
 				}
 				
-				System.out.println("\nNuevo fichero: " + args[0].substring(0, args[0].length() - 5) + ".SinOutliers.arff");
+				System.out.println("\nNuevo fichero: " + args[0].substring(0, args[0].length() - 5) + "-SinOutliers.arff");
 				
 				LoaderSaver.getMyLoader().saveInstances(newData, args[0].substring(0, args[0].length() - 5) + "-SinOutliers.arff");
 
@@ -126,8 +138,17 @@ public class OneClassMain {
 				}
 				
 				OneClassAlgorithm svmScan = new OneClassAlgorithm(train, dev, test);
-				svmScan.performTest();
+				Instances data = svmScan.performTest();
 				
+				try {
+					data = OneClassFilters.getInstance().removeArtificialAttribute(data);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				LoaderSaver.getMyLoader().saveInstances(data, args[0].substring(0, args[0].length() - 5) + "-Positivos.arff");
+				
+				System.out.println("\nNuevo fichero: " + args[0].substring(0, args[0].length() - 5) + "-Positivos.arff");
 				System.out.println("\n--- Test del modelo One-clas realizado. ---");
 			} else {
 				System.out.println("\n¡¡¡ Error al crear el modelo !!!");
