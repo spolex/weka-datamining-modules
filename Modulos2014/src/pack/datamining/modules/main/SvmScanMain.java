@@ -42,7 +42,7 @@ public class SvmScanMain {
 		System.out.println(Strings.LABEL_OBJETIVO);
 		if(args.length>1)
 		{
-			 System.out.println("Configurando el algoritmo");
+			 System.out.println(Strings.MSG_CONF_ALGORITMO);
 			 pTrainData = LoaderSaver.getMyLoader().loadArff(args[0]);
 			 pDevData = LoaderSaver.getMyLoader().loadArff(args[1]);
 			 
