@@ -6,6 +6,8 @@ import weka.attributeSelection.ClassifierSubsetEval;
 import weka.attributeSelection.GreedyStepwise;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.lazy.IBk;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
@@ -24,26 +26,25 @@ public class AttributeSelect
 	 */
 	private static Filter getAttributeSelectionFilter(Instances originalInstances) throws Exception
 	{		
-		 J48 classJ48 = new J48();
-		 classJ48.setOptions(weka.core.Utils.splitOptions("-C 0.25 -M 2"));
+		 NaiveBayes classNB = new NaiveBayes();
 		 
 		 RandomForest classRF = new RandomForest();
 		 classRF.setOptions(weka.core.Utils.splitOptions("-I 10 -K 0 -S 1"));
 		 
-		 Filter j48Fil = createFilter(originalInstances, classJ48);
+		 Filter NBFil = createFilter(originalInstances, classNB);
 		 Filter rfFil = createFilter(originalInstances, classRF);
 		 
 		 int numValuesClass = originalInstances.numClasses();
-		 Instances j48Inst = selecAttributesWithFilter(j48Fil, originalInstances);
+		 Instances j48Inst = selecAttributesWithFilter(NBFil, originalInstances);
 		 Instances RFInst = selecAttributesWithFilter(rfFil, originalInstances);
 		 
-		 double j48Fm, RFFm;
-		 j48Fm = calculateFmeasure(j48Inst, numValuesClass);
+		 double NBFm, RFFm;
+		 NBFm = calculateFmeasure(j48Inst, numValuesClass);
 		 RFFm = calculateFmeasure(RFInst, numValuesClass);
 		 
-		 if (j48Fm > RFFm)
+		 if (NBFm > RFFm)
 			{
-			return j48Fil;
+			return NBFil;
 			}
 		 else
 			 {
