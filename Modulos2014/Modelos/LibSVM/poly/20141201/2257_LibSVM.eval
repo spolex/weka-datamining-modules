@@ -1,0 +1,113 @@
+Evaluaciones para el modeloLibSVM		0		1		2257
+
+Train dataset:
+data/Resample_2014112619/Outlier_2014112619/train.e2e.wOOV.obfuscated.arffattSel_20141126-1919_OutlierClass_20141126-1920_ResampleClass.arff
+Develop dataset
+data/dev.e2e.wOOV.obfuscated.arffattSel.arff
+
+
+
+
+Evaluación no-honesta 
+======================================== 
+
+Correctly Classified Instances       16376               71.3831 %
+Incorrectly Classified Instances      6565               28.6169 %
+Kappa statistic                          0.4293
+Mean absolute error                      0.2862
+Root mean squared error                  0.5349
+Relative absolute error                 57.2358 %
+Root relative squared error            106.9914 %
+Coverage of cases (0.95 level)          71.3831 %
+Mean rel. region size (0.95 level)      50      %
+Total Number of Instances            22941     
+Recall:	 0.713831132034349
+Precision:	 0.7818623261146133
+
+=== Confusion Matrix ===
+
+     a     b   <-- classified as
+  5448  6091 |     a = V1
+   474 10928 |     b = V2
+Parámetros óptimos======================================== 
+
+|| C: 4.0 ||
+|| gamma: 1.0006771306930664 ||
+|| degree: 2 ||
+======================================== 
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,472    0,042    0,920      0,472    0,624      0,492    0,715     0,700     V1
+                 0,958    0,528    0,642      0,958    0,769      0,492    0,715     0,636     V2
+Weighted Avg.    0,714    0,283    0,782      0,714    0,696      0,492    0,715     0,668     
+
+
+Evaluación hold-out con dev 
+======================================== 
+
+Correctly Classified Instances       33092               82.0612 %
+Incorrectly Classified Instances      7234               17.9388 %
+Kappa statistic                          0.4972
+Mean absolute error                      0.1794
+Root mean squared error                  0.4235
+Relative absolute error                 35.7868 %
+Root relative squared error             84.4928 %
+Coverage of cases (0.95 level)          82.0612 %
+Mean rel. region size (0.95 level)      50      %
+Total Number of Instances            40326     
+Recall:	 0.8206120121013738
+Precision:	 0.8222282624038749
+
+=== Confusion Matrix ===
+
+     a     b   <-- classified as
+  5467  6126 |     a = V1
+  1108 27625 |     b = V2
+Parámetros óptimos======================================== 
+
+|| C: 4.0 ||
+|| gamma: 1.0006771306930664 ||
+|| degree: 2 ||
+======================================== 
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,472    0,039    0,831      0,472    0,602      0,531    0,717     0,544     V1
+                 0,961    0,528    0,818      0,961    0,884      0,531    0,717     0,814     V2
+Weighted Avg.    0,821    0,388    0,822      0,821    0,803      0,531    0,717     0,737     
+
+
+Evaluación 10FCV con dev+train 
+======================================== 
+
+Correctly Classified Instances       65746               81.5181 %
+Incorrectly Classified Instances     14906               18.4819 %
+Kappa statistic                          0.461 
+Mean absolute error                      0.1848
+Root mean squared error                  0.4299
+Relative absolute error                 40.5773 %
+Root relative squared error             90.0225 %
+Coverage of cases (0.95 level)          81.5181 %
+Mean rel. region size (0.95 level)      50      %
+Total Number of Instances            80652     
+Recall:	 0.8151812726280812
+Precision:	 0.829363041121532
+
+=== Confusion Matrix ===
+
+     a     b   <-- classified as
+  9398 13788 |     a = V1
+  1118 56348 |     b = V2
+Parámetros óptimos======================================== 
+
+|| C: 4.0 ||
+|| gamma: 1.0006771306930664 ||
+|| degree: 2 ||
+======================================== 
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,405    0,019    0,894      0,405    0,558      0,519    0,693     0,533     V1
+                 0,981    0,595    0,803      0,981    0,883      0,519    0,693     0,802     V2
+Weighted Avg.    0,815    0,429    0,829      0,815    0,790      0,519    0,693     0,724     
