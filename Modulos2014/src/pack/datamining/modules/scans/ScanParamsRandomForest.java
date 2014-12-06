@@ -7,8 +7,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 
+
+
 import pack.datamining.modules.evaluation.Multibounds;
 import pack.datamining.modules.util.Strings;
+import weka.classifiers.Evaluation;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
@@ -19,7 +22,7 @@ public class ScanParamsRandomForest {
 	private Instances mTrain;
 	private Instances mDev;
 	private RandomForest mModel;
-	private Multibounds mEvaluator;
+	private Evaluation mEvaluator;
 	private File mModels;
 	private double mFmeasureAux = 0.0;
 	private double mFmeasureBest = 0.0;
@@ -34,24 +37,30 @@ public class ScanParamsRandomForest {
 		this.mModel= new RandomForest();		
 	}
 	
-	
+	/*
+	 * maxI: número máximo de árboles a probar
+	 * maxK: número máximo de atributos a probar. Puede ser conveniente darle el valor del número de atributos si no son demasiados
+	 */
 	public RandomForest scanParams(int maxI, int maxK)
 	{
 		/*
 		 * Parámetros a barrer:
-		 * 	-I: número de árboles (por defecto 10)
+		 * 	-I: número de árboles (por defecto en weka 10)
 		 *  -K: número de atributos a considerar
 		 */
-		int minI = 0;
-		int minK = 0;
+		int minI = 1;
+		int minK = 1;
 		if (maxI==0)
 		{
-			maxI = 10;
-			//TODO ver cuál podría ser el max
+			maxI = 1000;
+			
+			// Un número arbitrariamente grande
 		}
+		
 		if (maxK == 0)
 		{
 			maxK = Double.valueOf(Math.sqrt(Double.valueOf(mTrain.numAttributes()))).intValue();
+			
 			// me encanta hacer casting numérico en Java :D okno
 			
 			/*
@@ -70,6 +79,7 @@ public class ScanParamsRandomForest {
 			 */
 			
 		}
+	
 		
 		configureModel();
 		
@@ -84,23 +94,39 @@ public class ScanParamsRandomForest {
 			{
 				mModel.setNumFeatures(k);
 				try {
-					this.mEvaluator=new Multibounds(mTrain);
-					mEvaluator.evaluateModel(mModel, mTrain, mDev);
+					mModel.buildClassifier(mTrain);
+				} catch (Exception e1) {
+					
+					e1.printStackTrace();
+				}
+			
+				try {
+					mEvaluator = new Evaluation(mTrain);
+					mEvaluator.evaluateModel(mModel, mDev);
+					
 				}
 				catch (Exception e) {}
 				
-				mFmeasureAux = mEvaluator.fMeasure(0);
 				
+				mFmeasureAux = mEvaluator.fMeasure(0);
 				if (mFmeasureAux > mFmeasureBest)
 				{
+					mFmeasureBest = mFmeasureAux;
 					 bestI = i;
 					 bestK = k;
 				}
 			}
+			System.out.println("n de i "+i);
+			System.out.println(mFmeasureAux);
 			
-			//si estamos en un múltiplo de 10 de nº de árboles (se va comprobar cada 10 en 10)
 			
-			if (i % 10 == 0 && previousBestFmeasure != 0)
+			System.out.println(mEvaluator.fMeasure(1));
+			/*
+			 * Si estamos en un múltiplo de 100 de nº de árboles (se va comprobar cada 100 en 100), para tener un límite de barrido ya que el nº de árboles
+			 * no tiene un límite fijo más allá de la lógica (es decir, si no mejora o mejora muy poco, etc.). 
+			 */
+			
+			if (i % 100 == 0 && previousBestFmeasure != 0.0)
 			{
 				if (shouldStop(mFmeasureBest, previousBestFmeasure))
 				{
@@ -108,7 +134,7 @@ public class ScanParamsRandomForest {
 				}
 				previousBestFmeasure = mFmeasureBest;
 			}
-			else if (previousBestFmeasure == 0)
+			else if (i % 100 == 0 && previousBestFmeasure == 0)
 			{
 				previousBestFmeasure = mFmeasureBest;
 			}
@@ -137,7 +163,7 @@ public class ScanParamsRandomForest {
 		//Inicializar figuras de mérito
 		mFmeasureAux = 0.0;
 		mFmeasureBest = 0.0;
-		//TODO no sé si está todo
+	
 	
 	
 	}
@@ -163,7 +189,8 @@ public class ScanParamsRandomForest {
 			
 		try 
 		{
-			this.mEvaluator=new Multibounds(mTrain);
+			mModel.buildClassifier(mTrain);
+			this.mEvaluator=new Evaluation(mTrain);
 			
 		} 
 		catch (Exception e)
@@ -172,7 +199,7 @@ public class ScanParamsRandomForest {
 		}
 		
 		try {
-			mEvaluator.evaluateModel(mModel, mTrain, mDev);
+			mEvaluator.evaluateModel(mModel, mDev);
 		} catch (Exception e) {
 			
 			e.printStackTrace();
@@ -201,7 +228,7 @@ public class ScanParamsRandomForest {
 	private boolean shouldStop(double fMeasNew, double fMeasPrev)
 	{
 		/*
-		 *  
+		 *  Si la fMeasure no ha mejorado en más de 0'05 (de nuevo, un nº arbitrariamente pequeño), paramos
 		 */
 		
 		if (fMeasNew - fMeasPrev < 0.05)

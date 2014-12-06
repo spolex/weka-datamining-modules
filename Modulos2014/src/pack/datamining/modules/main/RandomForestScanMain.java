@@ -50,6 +50,8 @@ public class RandomForestScanMain {
 						 System.out.println("Argumento 4: "+Strings.MSG_ERROR_NUM_FORMATO+" "+e.getMessage());
 					 }
 				 }
+				 else
+					 nMaxFeat=pTrainData.numAttributes();
 			 }
 			 
 		}
@@ -71,7 +73,7 @@ public class RandomForestScanMain {
 			}			
 			ScanParamsRandomForest rfScan =new ScanParamsRandomForest(pTrainData, pDevData);
 			rfScan.scanParams(nMaxTrees, nMaxFeat);
-			System.out.println(Strings.MSG_SVM_OPTIMIZED);
+			System.out.println("Modelo Random Forest optimizado");
 		}
 		else
 		{
