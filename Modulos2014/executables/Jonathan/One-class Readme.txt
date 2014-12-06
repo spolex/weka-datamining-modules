@@ -18,6 +18,9 @@ incorrectamente clasificadas. Tras entrenar el modelo, se realiza la predicción
 pedida, y el modelo entrenado.
 
 Además, es posible obtener un fichero con instancias con los outliers eliminados.
+
+Nota: lo más seguro es que no se pueda arrancar el programa con los conjuntos de instancias grandes por falta
+de memoria. ¿Cómo se sabe si hace falta más? El programa parará sin dar resultado alguno.
 ==================================================================================================================
 Argumentos:
 
