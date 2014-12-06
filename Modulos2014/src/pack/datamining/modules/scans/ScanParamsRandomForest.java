@@ -36,7 +36,7 @@ public class ScanParamsRandomForest {
 		this.mDev=pDevData;
 		this.mModel= new RandomForest();		
 	}
-	
+	 
 	/*
 	 * maxI: número máximo de árboles a probar
 	 * maxK: número máximo de atributos a probar. Puede ser conveniente darle el valor del número de atributos si no son demasiados

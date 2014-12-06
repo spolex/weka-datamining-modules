@@ -46,7 +46,7 @@ public class RandomForestScanMain {
 						 nMaxFeat=Integer.valueOf(args[3]);
 					 }
 					 catch (NumberFormatException e) 
-					 {
+					 { 
 						 System.out.println("Argumento 4: "+Strings.MSG_ERROR_NUM_FORMATO+" "+e.getMessage());
 					 }
 				 }
