@@ -19,7 +19,7 @@ import weka.core.SerializationHelper;
 public class PrediccionProbabilidad {
 	
 	//Guardamos el modelo como object, puede ser LibSVM o Classifier
-	private Object modelo;
+	private Classifier modelo;
 	
 	
 	/**
@@ -30,7 +30,7 @@ public class PrediccionProbabilidad {
 	{
 		try 
 		{
-			this.modelo = SerializationHelper.read(pModelo);
+			this.modelo = (Classifier) SerializationHelper.read(pModelo);
 		} 
 		catch (Exception e) 
 		{
@@ -54,22 +54,12 @@ public class PrediccionProbabilidad {
 	 */
 	public void calcularPrediccionesConProbabilidad(Instances pTest, PrintStream ficheroSalida)
 	{
-		//Comprobamos de que tipo es el modelo dado
-		
-		if(this.modelo instanceof Classifier)
-		{
-			this.calcularPrediccionesConProbabilidadClassifier((Classifier) this.modelo, pTest, ficheroSalida);
-		}
-	}
-	
-	private void calcularPrediccionesConProbabilidadClassifier(Classifier pModelo, Instances pTest, PrintStream ficheroSalida)
-	{
 		//Imprimir los valores posibles de la clase en el fichero
-		ficheroSalida.print("%");
 		Attribute clase = pTest.classAttribute();
-		for(int val=0; val < clase.numValues(); val++)
+		ficheroSalida.print(clase.value(1));
+		for(int val=1; val < clase.numValues(); val++)
 		{
-			ficheroSalida.print(" "+ clase.value(val));
+			ficheroSalida.print(";"+ clase.value(val));
 		}
 
 
@@ -83,7 +73,15 @@ public class PrediccionProbabilidad {
 			instanciaActual = it.next();
 
 			try {
-				ficheroSalida.println(pModelo.distributionForInstance(instanciaActual).toString());
+				
+				double[] prob = this.modelo.distributionForInstance(instanciaActual);
+				//Imprimir las probabilidades al fichero
+				for(int pos=0;pos<prob.length;pos++)
+				{
+					if(pos == prob.length-1) ficheroSalida.print(prob[pos]);
+					else ficheroSalida.println(prob[pos]+";");
+				}
+				ficheroSalida.println();
 			} catch (Exception e) {
 				//fallo
 			}
@@ -91,11 +89,6 @@ public class PrediccionProbabilidad {
 
 		//termina, cerramos el fichero
 		ficheroSalida.close();
-	}
-	
-	private void calcularPrediccionesConProbabilidadLibSVM(Classifier modelo, Instances pTest, PrintStream ficheroSalida)
-	{
-		
 	}
 
 }

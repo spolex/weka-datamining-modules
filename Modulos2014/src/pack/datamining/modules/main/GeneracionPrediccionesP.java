@@ -6,9 +6,7 @@ import java.io.PrintStream;
 
 import pack.datamining.modules.evaluation.PrediccionProbabilidad;
 import pack.datamining.modules.io.LoaderSaver;
-import weka.classifiers.Classifier;
 import weka.core.Instances;
-import weka.core.SerializationHelper;
 
 public class GeneracionPrediccionesP {
 
@@ -111,7 +109,23 @@ public class GeneracionPrediccionesP {
 	 */
 	private static void help()
 	{
-		
+		System.out.println("\nObjetivo:"
+				+ "\n\t	Obtener las predicciones de un conjunto de test obteniendo por cada instancia la probabilidad de pertenencia a cada clase posible"
+				+ "\nEjecución:"
+				+ "\n\t	Comando: java -jar MDP5_predicciones_prob.jar Fichero_Test Fichero_Modelo [-h]"
+				+ "\n	Argumentos:"
+				+ "\n	\t	Fichero_Test"
+				+ "\n	\t\t		Fichero arff conteniendo las instancias a predecir. El atributo clase es el último de los especificados."
+				+ "\n		\tFichero_Modelo"
+				+ "\n		\t\t	Fichero .model que contiene un modelo ya entrenado."
+				+ "\n		\t[-h]"
+				+ "\n		\t\t	imprime la ayuda para la ejecución del programa. Si este parámetro se especifica, finaliza el programa tras mostrar la ayuda, independientemente del resto de parámetros especificados"
+				+ "\nPrecondiciones:"
+				+ "\n	\tDisponer de la máquina virtual JAVA v7"
+				+ "\n	\tEl fichero de test debe estar en formato ARFF y la clase debe ser el último de los atributos."
+				+ "\n	\tEl modelo debe estar previamente entrenado."
+				+ "\nPostcondiciones:"
+				+ "\n	\tSe generará un fichero con extensión \"nombremodelo-pred-prob.txt\" que contendrá una fila por cada instancia de test en la que se especifica el valor de la probabilidad de pertenencia a cada una de las clases posibles");
 	}
 	
 	/**
