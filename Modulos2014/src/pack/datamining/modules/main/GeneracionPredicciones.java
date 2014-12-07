@@ -124,7 +124,7 @@ public class GeneracionPredicciones {
 				+ "\nPrecondiciones:"
 				+ "\n	\tDisponer de la máquina virtual JAVA v7"
 				+ "\n	\tEl fichero de test debe estar en formato ARFF, la clase debe ser el último de los atributos y debe estar preparado para ser usado por el modelo proporcionado."
-				+ "\n	\tEl modelo debe estar previamente entrenado."
+				+ "\n	\tEl modelo debe estar previamente entrenado y creado con la librería Weka versión 3.7 o LibSVM versión 1.6."
 				+ "\nPostcondiciones:"
 				+ "\n	\tSe generará un fichero con extensión \"nombretest-pred-prob.txt\" que contendrá una fila por cada instancia de test en la que se especifica el valor de la probabilidad de pertenencia a cada una de las clases posibles."
 				+ "\n \tSe generará un fichero con extensión \"nombretest-predicciones.txt\" que contendrá la clase estimada por el clasificador para cada instancia del conjunto de test.");

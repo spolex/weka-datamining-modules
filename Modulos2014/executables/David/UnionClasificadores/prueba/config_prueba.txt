@@ -1,0 +1,3 @@
+./prueba/resultado_j48-pred-prob.txt;0.2
+./prueba/resultado_oneR-pred-prob.txt;0.8
+
