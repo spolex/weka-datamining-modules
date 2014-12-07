@@ -6,7 +6,9 @@ import java.util.logging.Logger;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.LibSVM;
+import weka.classifiers.lazy.IBk;
 import weka.core.Instances;
 
 @SuppressWarnings("serial")
@@ -134,6 +136,53 @@ public class Multibounds extends Evaluation
 	public double[] dishonestEvaluatorSVM(LibSVM estimador, Instances pData) throws Exception
 	{		
 		return this.evaluateModel(estimador, pData);		 
+	}
+	/**
+	 * 
+	 * @param estimador
+	 * @param pTrain
+	 * @param pDev
+	 */
+	public void evaluateKnn(IBk estimador,Instances pTrain,Instances pDev){			
+		try 
+		{	
+			estimador.buildClassifier(pTrain);
+		} 
+		catch (Exception e2) 
+		{
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, e2.getMessage());
+		}
+		try 
+		{
+			this.evaluateModel(estimador, pDev);
+		} 
+		catch (Exception e)
+		{
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, e.getMessage());
+		}		
+	}
+	 /** 
+	 * @param estimador
+	 * @param pTrain
+	 * @param pDev
+	 */
+	public void evaluateNB(NaiveBayes estimador,Instances pTrain,Instances pDev){			
+		try 
+		{	
+			estimador.buildClassifier(pTrain);
+		} 
+		catch (Exception e2) 
+		{
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, e2.getMessage());
+		}
+		try 
+		{
+			this.evaluateModel(estimador, pDev);
+		} 
+		catch (Exception e)
+		{
+			Logger.getLogger(LOG_TAG).log(Level.SEVERE, e.getMessage());
+		}		
 	}
 	/**
 	 * 
