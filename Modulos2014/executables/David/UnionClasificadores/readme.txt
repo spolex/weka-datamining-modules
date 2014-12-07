@@ -28,7 +28,7 @@ Precondiciones:
 
 	Disponer de la máquina virtual JAVA v7
 	
-	El fichero de parámetros debe estar especificado de forma correcta
+	El fichero de parámetros debe estar especificado de forma correcta. La suma de las ponderaciones adjudicadas al fichero de predicciones de cada modelo debe ser 1.
 	
 	Los ficheros de predicciones deben cumplir el siguiente formato, donde las probabilidades de pertenencia a cada clase se especifican para cada instancia en una línea:
 			Fichero_Predicciones (separador = ;):
