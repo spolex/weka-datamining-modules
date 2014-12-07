@@ -47,20 +47,13 @@ public class OneClassAlgorithm {
 	}
 	
 	/**
-	 * Realiza el barrido de parámetros, crea un modelo evaluador y devuelve las instancias positivas (los outliers).
+	 * Realiza el barrido de parámetros, crea un modelo evaluador.
 	 * @return Instances: conjunto de instancias reconocidas como positivas.
 	 */
-	public Instances getModelTrained() {
-		Instances data = null;
+	public void getModelTrained() {
 		this.scanParams();
 		this.evaluateModel();		
 		this.createFiles();
-		try {
-			data = this.getIncorrectDataset();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return data;
 	}
 	
 	/**
@@ -148,7 +141,7 @@ public class OneClassAlgorithm {
 		
 		System.out.println("\n--- Barrido del parámetro nu del clasificador One-class. ---");
 		
-		for (double nu = 0.001; nu <= 0.1; nu += 0.001) {
+		for (double nu = 0.001; nu <= 0.1; nu += 0.001) { // No recuerdo dónde leí que la mejor nu se encuentra entre 10^-3 y 10^-1.
 			System.out.println("\nBarrido " + sweep + " de 100...");
 			System.out.printf(" - Nu: %.3f.\n", nu);
 			

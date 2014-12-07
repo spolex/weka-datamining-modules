@@ -64,17 +64,8 @@ public class OneClassMain {
 				}
 				
 				OneClassAlgorithm svmScan = new OneClassAlgorithm(train, dev);
-				Instances data = svmScan.getModelTrained();
+				svmScan.getModelTrained();
 
-				try {
-					data = OneClassFilters.getInstance().removeArtificialAttribute(data);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				LoaderSaver.getMyLoader().saveInstances(data, args[0].substring(0, args[0].length() - 5) + "-Positivos.arff");
-				
-				System.out.println("\nNuevo fichero: " + args[0].substring(0, args[0].length() - 5) + "-Positivos.arff");
 				System.out.println("\n--- Modelo One-class optimizado. ---");
 			} else {
 				System.out.println("\n¡¡¡ Error al crear el modelo !!!");
@@ -146,9 +137,9 @@ public class OneClassMain {
 					e.printStackTrace();
 				}
 				
-				LoaderSaver.getMyLoader().saveInstances(data, args[0].substring(0, args[0].length() - 5) + "-Positivos.arff");
+				LoaderSaver.getMyLoader().saveInstances(data, args[2].substring(0, args[2].length() - 5) + "-Positivos.arff");
 				
-				System.out.println("\nNuevo fichero: " + args[0].substring(0, args[0].length() - 5) + "-Positivos.arff");
+				System.out.println("\nNuevo fichero: " + args[2].substring(0, args[2].length() - 5) + "-Positivos.arff");
 				System.out.println("\n--- Test del modelo One-clas realizado. ---");
 			} else {
 				System.out.println("\n¡¡¡ Error al crear el modelo !!!");
