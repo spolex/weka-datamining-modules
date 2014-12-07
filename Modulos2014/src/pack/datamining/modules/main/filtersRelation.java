@@ -19,13 +19,12 @@ public class filtersRelation {
 		int scaleFactor=10;
 		int maxiumScale=4000;
 		J48 tree = new J48();
-		double area=0;
-		int smoteFactor;
+
 		Instances modifiedInstances;
 		Evaluation evaluator = new Evaluation(originalInstances);
 		double partialROC;
 		double correct;
-		for(int i=2000;i<maxiumScale;i+=scaleFactor)
+		for(int i=100;i<maxiumScale;i+=scaleFactor)
 		{
 			modifiedInstances=new Instances(originalInstances);
 			modifiedInstances.setClassIndex(modifiedInstances.numAttributes()-1);
@@ -38,12 +37,8 @@ public class filtersRelation {
 			partialROC=evaluator.areaUnderROC(0);
 			precision=evaluator.precision(0);
 			correct=evaluator.correct();
-			if(partialROC>area)
-			{
-				area=partialROC;
-				smoteFactor=i;
-			}
-				System.out.println(partialROC +"\t"+ i +"\t"+precision+"\t"+correct);
+			
+			System.out.println(partialROC +"\t"+ i +"\t"+precision+"\t"+correct);
 			
 			
 		}	

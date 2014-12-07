@@ -1,0 +1,5 @@
+Filtro para eliminación de OutLiers provisional, probado funcional sobre diabetes.arff y otros archivos. 
+
+Pasar un archivo arff válido, devuelve otro habiendo eliminado los outliers, tiempo de ejecución demasiado lento, considerar cambiar el cálculo de distancias en vez de todos entre todos de cada uno a un centroide global.
+
+En estudio.
