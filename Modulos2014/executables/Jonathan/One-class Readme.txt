@@ -20,7 +20,7 @@ pedida, y el modelo entrenado.
 Además, es posible obtener un fichero con instancias con los outliers eliminados.
 
 Nota: lo más seguro es que no se pueda arrancar el programa con los conjuntos de instancias grandes por falta
-de memoria. ¿Cómo se sabe si hace falta más? El programa parará sin dar resultado alguno.
+de memoria. ¿Cómo se sabe si hace falta más? El programa parará sin dar resultado ni exlicación alguna.
 ==================================================================================================================
 Argumentos:
 
@@ -39,9 +39,9 @@ Argumentos:
 Nota: dependiendo del número de parámetros introducidos, hará una opción u otra.
 
 Ejemplos:
-	1. java [-Xmx2048m] -jar oneclass.jar train.e2e.wOOV.obfuscated.arff
-	2. java [-Xmx2048m] -jar oneclass.jar train.e2e.wOOV.obfuscated.arff dev.e2e.wOOV.obfuscated.arff
-	3. java [-Xmx2048m] -jar oneclass.jar train.e2e.wOOV.obfuscated.arff dev.e2e.wOOV.obfuscated.arff
+	1. java [-Xmx2048m] -jar "One-class Beta 2.jar" train.e2e.wOOV.obfuscated.arff
+	2. java [-Xmx2048m] -jar "One-class Beta 2.jar" train.e2e.wOOV.obfuscated.arff dev.e2e.wOOV.obfuscated.arff
+	3. java [-Xmx2048m] -jar "One-class Beta 2.jar" train.e2e.wOOV.obfuscated.arff dev.e2e.wOOV.obfuscated.arff
 	   test.e2e.wOOV.obfuscated.arff
 ==================================================================================================================
 Precondiciones:
@@ -75,14 +75,14 @@ podemos introducir el siguiente comando:
 
 En caso de que no tenga los permisos suficientes para poder ejecutarlo se los asignamos:
 
-		$sudo chmod 755 SCPA.jar
+		$sudo chmod 755 "One-class Beta 2.jar"
 
 Nota: se necesita la contraseña de super usuario para realizar esta tarea.
 
 3. Volvemos al directorio raíz del workspace e introducimos el comando para ejecutar SCPA.jar:
 
 		cd ..
-		$java -jar [-Xmx2048m] execuables/oneclass.jar "path_train" ["path_dev"] ["path_test"]
+		$java -jar [-Xmx2048m] execuables/"One-class Beta 2.jar" "path_train" ["path_dev"] ["path_test"]
 
 Donde le asignaremos suficiente memoria para poder realizar el cómputo sin problemas con el parámetro -Xmx
 de la máquina virtual de java.
@@ -96,7 +96,7 @@ En la carpeta examples se encuentran varios archivos .arff con los que realizar 
 ellos ionosphere.arff, además de los resultados de los experimentos ya realizados. Para ésto, una vez situados
 en el directorio bin, como se ha descrito en los puntos anteriores, introducimos el siguiente comando:
 
-		$java -jar -Xmx2048m execuables/oneclass.jar examples/train.e2e.wOOV.obfuscated.arff
+		$java -jar -Xmx2048m execuables/"One-class Beta 2.jar" examples/train.e2e.wOOV.obfuscated.arff
 
 Los resultados con los que cotejar se encuentran en el mismo directorio.
 ==================================================================================================================
@@ -113,9 +113,9 @@ subdirectorio executables, oneclass.jar, supondremos que el workspace en está e
 		cd C:\
 		cd Users\usuario\Modulos2014
 
-3. Introducimos el comando para ejecutar SCPA.jar:
+3. Introducimos el comando para ejecutar "One-class Beta 2.jar":
 
-		java -jar [-Xmx2048m] execuables/oneclass.jar "path_train" ["path_dev"] ["path_test"]
+		java -jar [-Xmx2048m] execuables/"One-class Beta 2.jar" "path_train" ["path_dev"] ["path_test"]
 
 Donde le asignaremos suficiente memoria para poder realizar el cómputo sin problemas con el parámetro -Xmx
 de la máquina virtual de java.
@@ -129,14 +129,15 @@ En la carpeta examples se encuentran varios archivos .arff con los que realizar 
 ellos ionosphere.arff, además de los resultados de los experimentos ya realizados. Para ésto, una vez situados
 en el directorio bin, como se ha descrito en los puntos anteriores, introducimos el siguiente comando:
 
-		$java -jar -Xmx2048m execuables/oneclass.jar examples/train.e2e.wOOV.obfuscated.arff
+		$java -jar -Xmx2048m execuables/"One-class Beta 2.jar" examples/train.e2e.wOOV.obfuscated.arff
 
-Los resultados con los que cotejar se encuentran en el mismo directorio.
+Los resultados con los que cotejar se encuentran en el mismo directorio del ejecutable salvo los arff creados
+que estarán donde se tengan los arff usados para correr el programa.
 ==================================================================================================================
 Ejemplo de resultados:
 
-java -jar ./bin/SCPA.jar examples/train.e2e.wOOV.obfuscated.arffattSel.arff examples/dev.e2e.wOOV.obfuscated.arffattSel.arff
-examples/test.e2e.wOOV.obfuscated.arffattSel.arff
+java -jar executables/"One-class Beta 2.jar" examples/train.e2e.wOOV.obfuscated.arffattSel.arff
+examples/dev.e2e.wOOV.obfuscated.arffattSel.arff examples/test.e2e.wOOV.obfuscated.arffattSel.arff
 
 +++ One-class. +++
 
