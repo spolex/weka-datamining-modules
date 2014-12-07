@@ -51,7 +51,10 @@ Precondiciones:
 Postcondiciones:
 	1. Se obtiene un fichero con el conjunto de instancias con los outliers eliminados.
 	   nombreDelFichero_SinOutliers.txt.
-	2 y 3. Se obtienen varios ficheros:
+	2. Se obtienen dos ficheros:
+		- Modelo entrenado: fecha-hora_OneClass.model
+		- Fichero de texto con los resultados obtenidos: fecha-hora_OneClassPredictions.txt
+	3. Se obtienen tres ficheros:
 		- Modelo entrenado: fecha-hora_OneClass.model
 		- Fichero de texto con los resultados obtenidos: fecha-hora_OneClassPredictions.txt
 		- Fichero con el conjunto de instancias positivas: nombreDelFichero-Positivos.arff
