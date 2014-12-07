@@ -1,0 +1,6 @@
+java -jar /ruta/Al/fichero-test-de-la-practica.arff ./prueba/oneR.model
+
+
+Los ficheros de resultado se generan en el mismo directorio en que se encuentra el test.
+
+Los ficheros de resultado que se obtienen son los contenidos en la carpeta prueba con el prefijo resultado_oneR

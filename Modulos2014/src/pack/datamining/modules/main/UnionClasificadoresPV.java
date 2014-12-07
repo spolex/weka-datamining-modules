@@ -54,7 +54,8 @@ public class UnionClasificadoresPV {
 				//cierro el fichero
 				lector.close();
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				System.err.println("No se ha encontrado el fichero de configuración en la ruta especificada. El programa finalizará.");
+				System.exit(1);
 			}
 			System.out.println("Parámetros cargados");
 			/********************Cargar ahora los descriptores y las ponderaciones***********************/
@@ -75,7 +76,7 @@ public class UnionClasificadoresPV {
 					Scanner sc = new Scanner(file);
 					ficherosFuente[i] = sc;
 				} catch (FileNotFoundException e) {
-					System.err.println("Error al abrir uno de los ficheros, no se ha encontrado en la ruta especificada. El programa no puede continuar");
+					System.err.println("Error al abrir uno de los ficheros: "+partes[0]+", no se ha encontrado en la ruta especificada. El programa no puede continuar");
 					e.printStackTrace();
 					System.exit(1);
 				}
@@ -91,7 +92,7 @@ public class UnionClasificadoresPV {
 				
 			}
 			//compruebo que las ponderaciones suman 1
-			int suma = 0;
+			double suma = 0;
 			for(int i=0;i<ponderaciones.length;i++) suma += ponderaciones[i];
 			
 			if(suma != 1)
@@ -135,8 +136,8 @@ public class UnionClasificadoresPV {
 			/**********Crear los ficheros de salida de predicciones y predicciones con probabilidad******/
 			System.out.println("Creando los dos ficheros de salida:\n\tpredicciones-union.arff con la clase estimada por cada instancia \n\tpredicciones-union-ConProb.arff con las probabilidades de pertenencia de la instancia a cada clase");
 			
-			PrintStream predicciones = crearFichero("predicciones-union.arff", "");
-			PrintStream prediccionesProb = crearFichero("predicciones-union-ConProb.arff", "");
+			PrintStream predicciones = crearFichero("predicciones-union.arff", ".txt");
+			PrintStream prediccionesProb = crearFichero("predicciones-union-ConProb.arff", ".txt");
 			//Poner en la primera linea los valores posibles de las clases
 			prediccionesProb.println(lineaClases);
 			
@@ -311,8 +312,9 @@ public class UnionClasificadoresPV {
 				+ "\n\t\t\t..."
 				+ "\n\t\tEn todos los ficheros a usar, una instancia concreta ocupa la misma línea."
 				+ "\nPostcondiciones:"
-				+ "\n\tSe generará un fichero con extensión \"unionPV-pred-prob.txt\" que contendrá una fila por cada instancia de test en la que se especifica el valor de la probabilidad de pertenencia a cada una de las clases posibles."
-						+ "\n\tSe generará un fichero \"prediccion-union.txt\" que contendrá por cada fila la clase predicha para una instancia.");
+				+ "\n\t Los ficheros se generan en la misma carpeta en que se localiza el ejecutable"
+				+ "\n\tSe generará un fichero con extensión \"predicciones-union-ConProb.txt\" que contendrá una fila por cada instancia de test en la que se especifica el valor de la probabilidad de pertenencia a cada una de las clases posibles."
+						+ "\n\tSe generará un fichero \"predicciones-union.txt\" que contendrá por cada fila la clase predicha para una instancia.");
 	}
 	
 	/**

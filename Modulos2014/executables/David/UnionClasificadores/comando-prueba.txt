@@ -1,0 +1,6 @@
+java -jar UnionClasificadoresPV.jar ./prueba/config_prueba.txt
+
+
+Estando situado con la línea de comandos en el directorio del jar
+
+Se obtienen los resultados dados en la carpeta de resultados dentro de pruebas

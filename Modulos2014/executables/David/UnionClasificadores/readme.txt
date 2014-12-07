@@ -39,8 +39,9 @@ Precondiciones:
 			En todos los ficheros a usar, una instancia concreta ocupa la misma línea.
 
 Postcondiciones:
+	Los ficheros se generan en la misma carpeta en que se localiza el ejecutable.
 
-	Se generará un fichero con extensión "unionPV-pred-prob.txt" que contendrá una fila por cada instancia de test en la que se especifica el valor de la probabilidad de pertenencia a cada una de las clases posibles.
+	Se generará un fichero con extensión "predicciones-union-ConProb.txt" que contendrá una fila por cada instancia de test en la que se especifica el valor de la probabilidad de pertenencia a cada una de las clases posibles.
 	
-	Se generará un fichero "prediccion-union.txt" que contendrá por cada fila la clase predicha para una instancia.
+	Se generará un fichero "predicciones-union.txt" que contendrá por cada fila la clase predicha para una instancia.
 	

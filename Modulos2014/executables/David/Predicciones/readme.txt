@@ -26,7 +26,7 @@ Precondiciones:
 	
 	El fichero de test debe estar en formato ARFF, la clase debe ser el último de los atributos y debe estar preparado para ser usado por el modelo proporcionado.
 	
-	El modelo debe estar previamente entrenado.
+	El modelo debe estar previamente entrenado y creado con la librería Weka versión 3.7 o LibSVM versión 1.6.
 
 Postcondiciones:
 
