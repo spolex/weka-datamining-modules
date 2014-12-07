@@ -6,11 +6,24 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Implementación de la unión de clasificadores por el método de votación en paralelo.
+ * <br><br>
+ * La unión se realiza en base a ficheros diferentes para cada modelo a unir. Estos ficheros se corresponden con las estimaciones realizadas a un fichero de instancias para cada modelo.
+ *  Por cada instancia se tiene la probabilidad de pertenencia a una clase concreta.
+ * <br><br>
+ * Los test a unir y su ponderación correspondiente se especifican en un fichero cuya ruta se pasa por parámetro.
+ * <br><br>
+ * Como resultado se dan dos ficheros de predicciones. Uno con la clase estimada por la unión para cada instancia y otro con las probabilidades de pertenencia a cada clase recalculadas en base a los test proporcionados y su ponderación.
+ * 
+ * @author david
+ *
+ */
 public class UnionClasificadoresPV {
 
 	public static void main(String[] args) {
 
-		if(args.length!=0 && args.length != 1)
+		if(args.length == 1)
 		{
 			/*Comprobar si se ha pedido la ayuda*/
 			if(buscarParametro("-h", args) != -1)
@@ -27,6 +40,7 @@ public class UnionClasificadoresPV {
 			String[] clases;
 			
 			/************Abrir el fichero de parámetros y cargar un arraylist de strings (lineas)***/
+			System.out.println("Cargando los parámetros...");
 			ArrayList<String> lineas = new ArrayList<String>();
 			File archivo = new File(pathConfiguracion);
 			try {
@@ -42,8 +56,10 @@ public class UnionClasificadoresPV {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-			
+			System.out.println("Parámetros cargados");
 			/********************Cargar ahora los descriptores y las ponderaciones***********************/
+			
+			System.out.println("Abriendo los ficheros necesarios y cargando sus ponderaciones...");
 			
 			ficherosFuente = new Scanner[lineas.size()];
 			ponderaciones = new Double[lineas.size()];
@@ -59,7 +75,7 @@ public class UnionClasificadoresPV {
 					Scanner sc = new Scanner(file);
 					ficherosFuente[i] = sc;
 				} catch (FileNotFoundException e) {
-					System.err.println("Error al abrir uno de los ficheros. El programa no puede continuar");
+					System.err.println("Error al abrir uno de los ficheros, no se ha encontrado en la ruta especificada. El programa no puede continuar");
 					e.printStackTrace();
 					System.exit(1);
 				}
@@ -72,10 +88,20 @@ public class UnionClasificadoresPV {
 					e.printStackTrace();
 					System.exit(1);
 				}
+				
 			}
+			//compruebo que las ponderaciones suman 1
+			int suma = 0;
+			for(int i=0;i<ponderaciones.length;i++) suma += ponderaciones[i];
 			
+			if(suma != 1)
+			{
+				System.err.println("Las ponderaciones especificadas no suman 1, hay que corregir la configuración.\n El programa se detendrá");
+				System.exit(1);
+			}
+			System.out.println("Ficheros preparados y ponderaciones listas");
 			/******************Cargar los valores de las clases y avanzar una linea en cada descriptor***/
-			
+			System.out.println("Cargando los valores de la clase y comprobando que los ficheros son compatibles (tratan las mismas clases)");
 			//Cogemos el primer descriptor y obtenemos la primera linea
 			String lineaClases = ficherosFuente[0].nextLine();
 			//la troceamos por ";"
@@ -104,8 +130,10 @@ public class UnionClasificadoresPV {
 						System.exit(1);
 					}
 			}
+			System.out.println("Clases cargadas, los ficheros tratan las mismas clases");
 			
 			/**********Crear los ficheros de salida de predicciones y predicciones con probabilidad******/
+			System.out.println("Creando los dos ficheros de salida:\n\tpredicciones-union.arff con la clase estimada por cada instancia \n\tpredicciones-union-ConProb.arff con las probabilidades de pertenencia de la instancia a cada clase");
 			
 			PrintStream predicciones = crearFichero("predicciones-union.arff", "");
 			PrintStream prediccionesProb = crearFichero("predicciones-union-ConProb.arff", "");
@@ -115,7 +143,7 @@ public class UnionClasificadoresPV {
 			
 			
 			/*************************Algoritmo**********************************************************/
-			String error ="";
+			System.out.println("Calculando la unión de resultados de clasificadores...");
 			//Suponemos que todos los ficheros son iguales, realizamos el proceso hasta que el primero se quede sin lineas
 				while(ficherosFuente[1].hasNext())
 				{
@@ -178,7 +206,7 @@ public class UnionClasificadoresPV {
 						for(int pos=0;pos<union.length;pos++)
 						{
 							if(pos == union.length-1) prediccionesProb.print(union[pos]);
-							else prediccionesProb.println(union[pos]+";");
+							else prediccionesProb.print(union[pos]+";");
 						}
 						prediccionesProb.println();
 						
@@ -202,7 +230,7 @@ public class UnionClasificadoresPV {
 			predicciones.close();
 			prediccionesProb.close();
 			
-			System.out.println("La unión de clasificadores ha finalizado "+error);
+			System.out.println("La unión de clasificadores ha finalizado");
 		}
 		else
 		{
