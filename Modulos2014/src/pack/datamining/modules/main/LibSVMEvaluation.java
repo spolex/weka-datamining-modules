@@ -9,6 +9,7 @@ import java.util.Random;
 import pack.datamining.modules.evaluation.Multibounds;
 import pack.datamining.modules.filters.Randomize;
 import pack.datamining.modules.io.LoaderSaver;
+import pack.datamining.modules.util.Strings;
 import weka.classifiers.functions.LibSVM;
 import weka.core.Instances;
 import weka.core.SelectedTag;
@@ -24,7 +25,7 @@ public class LibSVMEvaluation {
 	public static void main(String[] args) {
 		if(args.length>2)
 		{
-			System.out.println("Configurando el algoritmo");
+			System.out.println(Strings.MSG_CONF_ALGORITMO);
 			String pTrainFile=args[0];
 			String pDevFile=args[1];
 			Instances pTrainData = LoaderSaver.getMyLoader().loadArff(pTrainFile);
@@ -37,7 +38,7 @@ public class LibSVMEvaluation {
 				String pathDir="";
 				try 
 				{
-					pathDir = configureDir(args);
+					pathDir = configureDir(args,2);
 					model = (LibSVM) SerializationHelper.read(args[2]);
 					//model.setModelFile(new File(args[2]));
 				} 
@@ -131,6 +132,9 @@ public class LibSVMEvaluation {
 											FileContent=FileContent+summary;
 											
 											LoaderSaver.getMyLoader().SaveFile(pathDir+"/"+evalName, FileContent, false);
+											
+											SerializationHelper.write(pathDir+"/"+"train+dev"+"svm.model", model);									
+											
 				} 
 				catch (Exception e) 
 				{
@@ -147,8 +151,8 @@ public class LibSVMEvaluation {
 	/**
 	 * @param args
 	 */
-	private static String configureDir(String[] args) {
-		String[] modelPath = args[2].split("/");
+	public static String configureDir(String[] args, int index) {
+		String[] modelPath = args[index].split("/");
 		String modelDir = modelPath[0]+"/";
 		for (int i=1;i<modelPath.length-1;i++)
 		{

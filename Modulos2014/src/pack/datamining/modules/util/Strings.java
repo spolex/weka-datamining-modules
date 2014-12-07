@@ -44,5 +44,6 @@ public class Strings
 	public static final String MSG_SERIALIZANDO = "Serializando el modelo....";
 	public static final String MSG_CLF_OPT_CONF = "Configurando el modelo óptimo....";
 	public static final String MSG_FIN = "Fin del algoritmo";
+	public static final String MSG_CONF_ALGORITMO = "Configurando el algoritmo";
 }
 

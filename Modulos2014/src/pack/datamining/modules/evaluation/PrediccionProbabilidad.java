@@ -11,7 +11,7 @@ import weka.core.SerializationHelper;
 
 /**
  * Clase destinada a realizar las predicciones de un test obteniendo por cada instancia la probabilidad de pertenencia 
- * a cada una de las clases posibles
+ * a cada una de las clases posibles y la clase estimada por el clasificador proporcionado
  * 
  * @author david
  *
@@ -19,7 +19,7 @@ import weka.core.SerializationHelper;
 public class PrediccionProbabilidad {
 	
 	//Guardamos el modelo como object, puede ser LibSVM o Classifier
-	private Object modelo;
+	private Classifier modelo;
 	
 	
 	/**
@@ -30,7 +30,7 @@ public class PrediccionProbabilidad {
 	{
 		try 
 		{
-			this.modelo = SerializationHelper.read(pModelo);
+			this.modelo = (Classifier) SerializationHelper.read(pModelo);
 		} 
 		catch (Exception e) 
 		{
@@ -41,36 +41,29 @@ public class PrediccionProbabilidad {
 	}
 	
 	/**
-	 * Realiza las predicciones de las instancias de test dadas y las almacena en el fichero dado.
+	 * Realiza las predicciones de las instancias de test dadas y las almacena en los ficheros dados en susu respectivos formatos.
 	 * <br><br>
-	 * Por cada instancia se calcula la probabilidad de pertenencia a cada uno de las diferentes clases posibles.
+	 * Por cada instancia se calcula, por un lado, la probabilidad de pertenencia a cada uno de las diferentes clases posibles y, por otro lado, la clase que estima el clasificador.
 	 * <br><br>
 	 * La primera línea del fichero de salida contiene los valores posibles de la clase.
 	 * 
 	 * @param pTest
 	 * Las instancias de las que calcular su probabilidad de pertenencia.
 	 * @param ficheroSalida
-	 * El ficherro en que se imprimirán los resultados
+	 * El fichero en que se imprimirán los resultados con la probabilidad de pertenencia a cada clase
+	 * @param fichClaseEstimada 
+	 * El fichero en que se escribirá la clase estimada por el modelo para cada instancia
 	 */
-	public void calcularPrediccionesConProbabilidad(Instances pTest, PrintStream ficheroSalida)
-	{
-		//Comprobamos de que tipo es el modelo dado
-		
-		if(this.modelo instanceof Classifier)
-		{
-			this.calcularPrediccionesConProbabilidadClassifier((Classifier) this.modelo, pTest, ficheroSalida);
-		}
-	}
-	
-	private void calcularPrediccionesConProbabilidadClassifier(Classifier pModelo, Instances pTest, PrintStream ficheroSalida)
+	public void calcularPrediccionesConProbabilidad(Instances pTest, PrintStream ficheroSalida, PrintStream fichClaseEstimada)
 	{
 		//Imprimir los valores posibles de la clase en el fichero
-		ficheroSalida.print("%");
 		Attribute clase = pTest.classAttribute();
-		for(int val=0; val < clase.numValues(); val++)
+		ficheroSalida.print(clase.value(0));
+		for(int val=1; val < clase.numValues(); val++)
 		{
-			ficheroSalida.print(" "+ clase.value(val));
+			ficheroSalida.print(";"+ clase.value(val));
 		}
+		ficheroSalida.println();
 
 
 		//Calcular las probabilidades para cada instancia
@@ -83,19 +76,30 @@ public class PrediccionProbabilidad {
 			instanciaActual = it.next();
 
 			try {
-				ficheroSalida.println(pModelo.distributionForInstance(instanciaActual).toString());
+				
+				double[] prob = this.modelo.distributionForInstance(instanciaActual);
+				//Imprimir las probabilidades al fichero
+				for(int pos=0;pos<prob.length;pos++)
+				{
+					if(pos == prob.length-1) ficheroSalida.print(prob[pos]);
+					else ficheroSalida.print(prob[pos]+";");
+				}
+				ficheroSalida.println();
+				
+				
+				
+				//Obtener la clase estimada por el modelo e imprimirla
+				fichClaseEstimada.println(instanciaActual.classAttribute().value((int) this.modelo.classifyInstance(instanciaActual)));
+				
+				
 			} catch (Exception e) {
-				//fallo
+				System.err.println("Las instancias de test no son compatibles con el modelo proporcionado. El programa finalizará");
+				System.exit(1);
 			}
 		}
 
 		//termina, cerramos el fichero
 		ficheroSalida.close();
-	}
-	
-	private void calcularPrediccionesConProbabilidadLibSVM(Classifier modelo, Instances pTest, PrintStream ficheroSalida)
-	{
-		
 	}
 
 }
