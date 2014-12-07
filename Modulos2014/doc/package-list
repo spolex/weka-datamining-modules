@@ -1,0 +1,9 @@
+pack.datamining.deprecated
+pack.datamining.modules.evaluation
+pack.datamining.modules.filters
+pack.datamining.modules.frames
+pack.datamining.modules.io
+pack.datamining.modules.main
+pack.datamining.modules.scans
+pack.datamining.modules.temp
+pack.datamining.modules.util
