@@ -93,6 +93,7 @@ public class LibSVMEvaluation {
 							FileContent=FileContent+summary;
 							LoaderSaver.getMyLoader().SaveFile(pathDir+"/"+evalName, FileContent, false);
 							
+							evaluation = new Multibounds(pTrainData);
 							evaluation.evaluateModel(model,pDevData);
 							
 							title=("\n\nEvaluación hold-out con dev \n");					
@@ -114,7 +115,7 @@ public class LibSVMEvaluation {
 									allData.addAll(pDevData);
 									Randomize.randomize(allData, 1);
 									model.buildClassifier(allData);
-									
+									evaluation = new Multibounds(allData);									
 									evaluation.crossValidateModel(model, allData, 10, new Random(1));
 									
 									title=("\n\nEvaluación 10FCV con dev+train \n");					
