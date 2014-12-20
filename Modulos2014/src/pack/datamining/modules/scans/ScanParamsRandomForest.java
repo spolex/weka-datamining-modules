@@ -177,7 +177,7 @@ public class ScanParamsRandomForest {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm"); // Formato de la fecha.
 		String dateS = dateFormat.format(calendar.getTime()); // Fecha y hora actuales formateadas.		
 		//String filePath = "Resultados/"+dateS+"resultados.txt";				
-		SerializationHelper.write(mModels+"/"+dateS+"_RBFsvm.model",mModel );
+		SerializationHelper.write(mModels+"/"+dateS+"_RForest.model",mModel );
 	}
 	
 	

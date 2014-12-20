@@ -46,9 +46,12 @@ public class NB {
 		String tipo = "No honesto:";
 		this.evaluator.evaluateNB(this.clasif,this.train, this.train);
 		imprimirDatos(path,this.evaluator, tipo);
+		
 		tipo = "Hold-out:";
+		this.evaluator = new Multibounds(train);
 		this.evaluator.evaluateNB(this.clasif,this.train,dev);
 		imprimirDatos(path, this.evaluator, tipo);
+		
 		tipo = "10 fold cross validation:";
 		Instances newTrain = new Instances(this.train);
 		for(int i = 0;i<this.dev.numInstances();i++){
@@ -57,8 +60,9 @@ public class NB {
 				newTrain.add(ins);
 			}
 		}
+		this.evaluator = new Multibounds(newTrain);
 		this.clasif.buildClassifier(newTrain);
-		this.evaluator.assesPerformanceNFCV(this.clasif, 10, train);
+		this.evaluator.assesPerformanceNFCV(this.clasif, 10, newTrain);
 		imprimirDatos(path, this.evaluator, tipo);
 		serializeModel();
 		

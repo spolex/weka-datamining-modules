@@ -101,6 +101,8 @@ import weka.core.neighboursearch.LinearNNSearch;
 				String tipo = "No honesto:";
 				this.evaluator.evaluateModel(this.clasif,train);
 				imprimirDatos(path,this.evaluator, tipo);
+				
+				this.evaluator = new Multibounds(train);
 				tipo = "Hold-out:";
 				this.evaluator.evaluateKnn(this.clasif,train,dev);
 				imprimirDatos(path, this.evaluator, tipo);
@@ -112,8 +114,9 @@ import weka.core.neighboursearch.LinearNNSearch;
 						newTrain.add(ins);
 					}
 				}
+				this.evaluator = new Multibounds(newTrain);
 				this.clasif.buildClassifier(newTrain);
-				this.evaluator.assesPerformanceNFCV(this.clasif, 10, train);
+				this.evaluator.assesPerformanceNFCV(this.clasif, 10, newTrain);
 				imprimirDatos(path, this.evaluator, tipo);
 				serializeModel();
 		}
